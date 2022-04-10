@@ -3,7 +3,7 @@
 
 import Foundation
 
-protocol UserService {
+public protocol UserService {
   /// Returns the user object of the requester's account.
   /// For OAuth2, this requires the identify scope, which will return the object without an email,
   /// and optionally the email scope, which returns the object with an email.

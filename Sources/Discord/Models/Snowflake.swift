@@ -3,6 +3,7 @@
 
 import Foundation
 
+/// - seealso: https://discord.com/developers/docs/reference#snowflakes
 public struct Snowflake: Hashable {
   public let stringValue: String
   

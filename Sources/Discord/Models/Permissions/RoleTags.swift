@@ -4,6 +4,7 @@
 import Foundation
 
 public extension Role {
+  /// - seealso: https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure
   struct Tags: Decodable {
     /// The id of the bot this role belongs to
     public let botID: Snowflake?
