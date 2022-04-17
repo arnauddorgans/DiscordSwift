@@ -32,6 +32,5 @@ final class GuildServiceImpl: GuildService {
   
   func getGuildChannels(id: Snowflake) async throws -> [Channel] {
     try await networkingService.request(method: .get, path: "/guilds/\(id.stringValue)/channels")
-    
   }
 }

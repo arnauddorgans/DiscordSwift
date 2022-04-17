@@ -10,7 +10,11 @@ protocol NetworkingService {
 final class NetworkingServiceImpl: NetworkingService {
   private let environmentService: EnvironmentService
   private let authenticationService: AuthenticationService
-  private let jsonDecoder = JSONDecoder()
+  private lazy var jsonDecoder: JSONDecoder = {
+    let jsonDecoder = JSONDecoder()
+    jsonDecoder.dateDecodingStrategy = .formatted(.iso8601)
+    return jsonDecoder
+  }()
   
   init(environmentService: EnvironmentService, authenticationService: AuthenticationService) {
     self.environmentService = environmentService
@@ -50,5 +54,16 @@ private extension NetworkingServiceImpl {
       }
     }
     return urlRequest
+  }
+}
+
+private extension DateFormatter {
+  static var iso8601: DateFormatter {
+    let formatter = DateFormatter()
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+    return formatter
   }
 }

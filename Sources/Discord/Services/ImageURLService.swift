@@ -18,7 +18,7 @@ public protocol ImageURLService {
   /// User Banner
   func userBanner(userID: Snowflake, hash: String) -> URL
   /// Default User Avatar
-  func defaultUserAvatar(userDiscriminator: String) -> URL
+  func defaultUserAvatar(userDiscriminator: Discriminator) -> URL
   /// User Avatar
   func userAvatar(userID: Snowflake, hash: String) -> URL
   /// Guild Member Avatar
@@ -74,8 +74,9 @@ final class ImageURLServiceImpl: ImageURLService {
     url(path: "/banners/\(userID.stringValue)/\(hash)")
   }
   
-  func defaultUserAvatar(userDiscriminator: String) -> URL {
-    url(path: "/embed/avatars/\(userDiscriminator)")
+  func defaultUserAvatar(userDiscriminator: Discriminator) -> URL {
+    let modulo = userDiscriminator.intValue.quotientAndRemainder(dividingBy: 5)
+    return url(path: "/embed/avatars/\(modulo.remainder)")
   }
   
   func userAvatar(userID: Snowflake, hash: String) -> URL {
