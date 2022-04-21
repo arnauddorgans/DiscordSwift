@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/channel#attachment-object-attachment-structure
-public struct Attachment: Decodable {
+public struct Attachment: Codable {
   /// Attachment id
   public let id: Snowflake
   /// Name of file attached

@@ -19,3 +19,11 @@ extension Discriminator: Decodable {
     self.init(intValue: intValue, stringValue: stringValue)
   }
 }
+
+// MARK: Encodable
+extension Discriminator: Encodable {
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(intValue)
+  }
+}

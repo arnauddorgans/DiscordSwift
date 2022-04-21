@@ -8,7 +8,7 @@ import Foundation
 /// Roles can have separate permission profiles for the global context (guild) and channel context.
 /// The @everyone role has the same ID as the guild it belongs to.
 /// - seealso: https://discord.com/developers/docs/topics/permissions#role-object-role-structure
-public struct Role: Decodable {
+public struct Role: Codable {
   /// Role id
   public let id: Snowflake
   /// Role name

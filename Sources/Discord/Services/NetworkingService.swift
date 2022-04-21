@@ -4,26 +4,31 @@
 import Foundation
 
 protocol NetworkingService {
-  func request<T>(method: HTTPMethod, path: String) async throws -> T where T: Decodable
+  @discardableResult
+  func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable
+  
+  @discardableResult
+  func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable
 }
 
 final class NetworkingServiceImpl: NetworkingService {
   private let environmentService: EnvironmentService
   private let authenticationService: AuthenticationService
-  private lazy var jsonDecoder: JSONDecoder = {
-    let jsonDecoder = JSONDecoder()
-    jsonDecoder.dateDecodingStrategy = .formatted(.iso8601)
-    return jsonDecoder
-  }()
+  private lazy var jsonDecoder: JSONDecoder = .iso8601
+  private lazy var jsonEncoder: JSONEncoder = .iso8601
   
   init(environmentService: EnvironmentService, authenticationService: AuthenticationService) {
     self.environmentService = environmentService
     self.authenticationService = authenticationService
   }
   
-  func request<T>(method: HTTPMethod, path: String) async throws -> T where T: Decodable {
+  func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable {
+    try await request(method: method, path: path, body: NoBody())
+  }
+  
+  func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
     let urlSession = URLSession.shared
-    let urlRequest = urlRequest(method: method, path: path)
+    let urlRequest = try urlRequest(method: method, path: path, body: body)
     let response = try await urlSession.data(for: urlRequest, delegate: nil)
     let httpURLResponse = try (response.1 as? HTTPURLResponse).unwrapped()
     let httpResponseCode = try HTTPResponseCode(rawValue: httpURLResponse.statusCode).unwrapped()
@@ -31,7 +36,7 @@ final class NetworkingServiceImpl: NetworkingService {
       let error = try jsonDecoder.decode(ErrorMessage.self, from: response.0)
       throw error
     } else {
-      return try jsonDecoder.decode(T.self, from: response.0)
+      return try jsonDecoder.decode(Response.self, from: response.0)
     }
   }
 }
@@ -41,10 +46,14 @@ private extension NetworkingServiceImpl {
     URL(string: environmentService.apiBaseURL + "/" + environmentService.apiVersion.rawValue + path)!
   }
   
-  func urlRequest(method: HTTPMethod, path: String) -> URLRequest {
+  func urlRequest<T>(method: HTTPMethod, path: String, body: T) throws -> URLRequest where T: Encodable {
     let url = url(path: path)
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = method.rawValue
+    if !(body is NoBody) {
+      urlRequest.httpBody = try jsonEncoder.encode(body)
+    }
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
     if let authentication = authenticationService.authentication {
       switch authentication {
       case .botToken(let string):
@@ -67,3 +76,21 @@ private extension DateFormatter {
     return formatter
   }
 }
+
+private extension JSONEncoder {
+  static var iso8601: JSONEncoder {
+    let jsonEncoder = JSONEncoder()
+    jsonEncoder.dateEncodingStrategy = .formatted(.iso8601)
+    return jsonEncoder
+  }
+}
+
+private extension JSONDecoder {
+  static var iso8601: JSONDecoder {
+    let jsonDecoder = JSONDecoder()
+    jsonDecoder.dateDecodingStrategy = .formatted(.iso8601)
+    return jsonDecoder
+  }
+}
+
+private struct NoBody: Encodable { }

@@ -5,7 +5,7 @@ import Foundation
 
 public extension Embed {
   /// - seealso: https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure
-  struct Thumbnail: Decodable {
+  struct Thumbnail: Codable {
     /// Source url of thumbnail (only supports http(s) and attachments)
     public let url: URL
     /// A proxied url of the thumbnail
@@ -14,6 +14,16 @@ public extension Embed {
     public let height: Int?
     /// Width of thumbnail
     public let width: Int?
+    
+    public init(url: URL,
+                proxyURL: URL? = nil,
+                height: Int? = nil,
+                width: Int? = nil) {
+      self.url = url
+      self.proxyURL = proxyURL
+      self.height = height
+      self.width = width
+    }
   }
 }
 

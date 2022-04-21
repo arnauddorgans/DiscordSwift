@@ -5,7 +5,7 @@ import Foundation
 
 public extension Embed {
   /// - seealso: https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure
-  struct Author: Decodable {
+  struct Author: Codable {
     /// Name of author
     public let name: String
     /// URL of author

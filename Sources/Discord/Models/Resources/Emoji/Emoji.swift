@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure
-public struct Emoji: Decodable {
+public struct Emoji: Codable {
   /// Emoji id
   public let id: Snowflake?
   /// Emoji name

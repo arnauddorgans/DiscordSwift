@@ -9,7 +9,7 @@ import Foundation
 /// Although they are similar, bot users are automated users that are "owned" by another user.
 /// Unlike normal users, bot users do not have a limitation on the number of Guilds they can be a part of.
 /// - seealso: https://discord.com/developers/docs/resources/user#user-object
-public struct User: Decodable {
+public struct User: Codable {
   /// The user's id  identify
   public let id: Snowflake
   /// The user's username, not unique across the platform  identify

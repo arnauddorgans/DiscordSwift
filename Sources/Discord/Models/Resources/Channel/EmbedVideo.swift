@@ -5,7 +5,7 @@ import Foundation
 
 public extension Embed {
   /// - seealso: https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure
-  struct Video: Decodable {
+  struct Video: Codable {
     /// Source url of video
     public let url: URL?
     /// A proxied url of the video
