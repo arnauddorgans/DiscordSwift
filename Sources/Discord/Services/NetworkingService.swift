@@ -32,26 +32,14 @@ final class NetworkingServiceImpl: NetworkingService {
   func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
     let urlSession = URLSession.shared
     let urlRequest = try urlRequest(method: method, path: path, body: body)
-    let response: (Data, URLResponse) = try await withCheckedThrowingContinuation { continuation in
-      urlSession.dataTask(with: urlRequest, completionHandler: { data, urlResponse, error in
-        if let error = error {
-          continuation.resume(throwing: error)
-        } else {
-          do {
-            try continuation.resume(returning: (data.unwrapped(), urlResponse.unwrapped()))
-          } catch {
-            continuation.resume(throwing: error)
-          }
-        }
-      })
-    }
-    let httpURLResponse = try (response.1 as? HTTPURLResponse).unwrapped()
+    let dataResponse = try await urlSession.dataResponse(for: urlRequest)
+    let httpURLResponse = try (dataResponse.response as? HTTPURLResponse).unwrapped()
     let httpResponseCode = try HTTPResponseCode(rawValue: httpURLResponse.statusCode).unwrapped()
     if httpResponseCode.isError {
-      let error = try jsonDecoder.decode(ErrorMessage.self, from: response.0)
+      let error = try jsonDecoder.decode(ErrorMessage.self, from: dataResponse.data)
       throw error
     } else {
-      return try jsonDecoder.decode(Response.self, from: response.0)
+      return try jsonDecoder.decode(Response.self, from: dataResponse.data)
     }
   }
 }
@@ -83,3 +71,23 @@ private extension NetworkingServiceImpl {
 }
 
 private struct NoBody: Encodable { }
+
+// MARK: Async Helpers
+private extension URLSession {
+  func dataResponse(for request: URLRequest) async throws -> (data: Data, response: URLResponse) {
+    try await withCheckedThrowingContinuation { continuation in
+      let task = dataTask(with: request, completionHandler: { data, urlResponse, error in
+        if let error = error {
+          continuation.resume(throwing: error)
+        } else {
+          do {
+            try continuation.resume(returning: (data.unwrapped(), urlResponse.unwrapped()))
+          } catch {
+            continuation.resume(throwing: error)
+          }
+        }
+      })
+      task.resume()
+    }
+  }
+}
