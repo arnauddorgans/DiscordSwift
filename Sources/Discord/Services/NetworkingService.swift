@@ -2,6 +2,9 @@
 // 
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 protocol NetworkingService {
   @discardableResult
