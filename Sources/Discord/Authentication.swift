@@ -10,3 +10,13 @@ public enum Authentication {
   /// Using an OAuth2 bearer token gained through the OAuth2 API
   case token(String)
 }
+
+extension Authentication {
+  var stringValue: String {
+    switch self {
+    case let .botToken(stringValue),
+      let .token(stringValue):
+      return stringValue
+    }
+  }
+}

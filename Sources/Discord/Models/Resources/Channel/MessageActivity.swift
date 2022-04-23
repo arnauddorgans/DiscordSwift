@@ -5,7 +5,7 @@ import Foundation
 
 public extension Message {
   /// - seealso: https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure
-  struct Activity: Decodable {
+  struct Activity: Codable {
     /// Type of message activity
     public let type: ActivityType
     /// Party_id from a Rich Presence event

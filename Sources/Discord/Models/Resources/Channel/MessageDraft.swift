@@ -15,7 +15,7 @@ public extension Message {
     /// Allowed mentions for the message
     public let allowedMentions: AllowedMention?
     /// Include to make your message a reply
-    public let messageReference: Snowflake?
+    public let messageReference: Reference?
     /// The components to include with the message
     public let components: [Component]?
     /// IDs of up to 3 stickers in the server to send in the message
@@ -33,7 +33,7 @@ public extension Message {
                 tts: Bool? = nil,
                 embeds: [Embed]? = nil,
                 allowedMentions: AllowedMention? = nil,
-                messageReference: Snowflake? = nil,
+                messageReference: Reference? = nil,
                 components: [Component]? = nil,
                 stickerIDs: [Snowflake]? = nil,
                 attachments: [Attachment]? = nil,

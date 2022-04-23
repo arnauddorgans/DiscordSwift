@@ -19,3 +19,11 @@ extension Box: Decodable where T: Decodable {
     self.init(value: value)
   }
 }
+
+// MARK: Encodable
+extension Box: Encodable where T: Encodable {
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(value)
+  }
+}

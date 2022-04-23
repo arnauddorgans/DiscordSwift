@@ -5,7 +5,7 @@ import Foundation
 
 public extension Guild {
   /// - seealso: https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure
-  struct Member: Decodable {
+  struct Member: Codable {
     /// The user this guild member represents
     public let user: User?
     /// This user's guild nickname

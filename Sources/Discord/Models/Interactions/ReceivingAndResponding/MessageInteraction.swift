@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure
-public struct MessageInteraction: Decodable {
+public struct MessageInteraction: Codable {
   /// ID of the interaction
   public let id: Snowflake
   /// The type of interaction

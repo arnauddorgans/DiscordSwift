@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/application#application-object-application-structure
-public struct Application: Decodable {
+public struct Application: Codable {
   /// The id of the app
   public let id: Snowflake
   /// The name of the app

@@ -5,7 +5,7 @@ import Foundation
 
 public extension Activity {
   /// - seealso: https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets
-  struct Assets: Decodable {
+  struct Assets: Codable {
     /// See Activity Asset Image
     public let largeImage: String?
     /// Text displayed when hovering over the large image of the activity

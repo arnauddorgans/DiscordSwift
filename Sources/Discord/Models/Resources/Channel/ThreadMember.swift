@@ -5,7 +5,7 @@ import Foundation
 
 /// A thread member is used to indicate whether a user has joined a thread or not.
 /// - seealso: https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure
-public struct ThreadMember: Decodable {
+public struct ThreadMember: Codable {
   /// The id of the thread
   public let id: Snowflake?
   /// The id of the user

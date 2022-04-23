@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
-public enum OAuth2Scope: String, Decodable {
+public enum OAuth2Scope: String, Codable {
   /// Allows your app to fetch data from a user's "Now Playing/Recently Played" list - requires Discord approval
   case activitiesRead = "activities.read"
   /// Allows your app to update a user's activity - requires Discord approval (NOT REQUIRED FOR GAMESDK ACTIVITY MANAGER)

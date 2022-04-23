@@ -5,7 +5,7 @@ import Foundation
 
 public extension Activity {
   /// - seealso: https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets
-  struct Secrets: Decodable {
+  struct Secrets: Codable {
     /// The secret for joining a party
     public let join: String?
     /// The secret for spectating a game

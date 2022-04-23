@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/topics/gateway#activity-object-activity-types
-public enum ActivityType: Int, Decodable {
+public enum ActivityType: Int, Codable {
   /// Playing {name}
   case game = 0
   /// Streaming {details}

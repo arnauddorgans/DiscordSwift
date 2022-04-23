@@ -5,7 +5,7 @@ import Foundation
 
 public extension Channel {
   /// - seealso: https://discord.com/developers/docs/resources/channel#channel-mention-object-channel-mention-structure
-  struct Mention: Decodable {
+  struct Mention: Codable {
     /// ID of the channel
     public let id: Snowflake
     /// ID of the guild containing the channel

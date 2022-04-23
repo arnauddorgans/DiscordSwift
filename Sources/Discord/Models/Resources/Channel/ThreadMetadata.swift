@@ -5,7 +5,7 @@ import Foundation
 
 /// The thread metadata object contains a number of thread-specific channel fields that are not needed by other channel types.
 /// - seealso: https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure
-public struct ThreadMetadata: Decodable {
+public struct ThreadMetadata: Codable {
   /// Whether the thread is archived
   public let archived: Bool
   /// Duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080

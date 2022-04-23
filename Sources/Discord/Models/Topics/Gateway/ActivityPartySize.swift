@@ -22,3 +22,11 @@ extension Activity.Party.Size: Decodable {
               maxSize: sizes[1])
   }
 }
+
+// MARK: Encodable
+extension Activity.Party.Size: Encodable {
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode([currentSize, maxSize])
+  }
+}

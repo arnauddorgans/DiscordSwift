@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/topics/gateway#activity-object
-public struct Activity: Decodable {
+public struct Activity: Codable {
   /// The activity's name
   public let name: String
   /// Activity type

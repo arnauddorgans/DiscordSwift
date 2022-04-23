@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/channel#overwrite-object
-public struct Overwrite: Decodable {
+public struct Overwrite: Codable {
   /// Role or user id
   public let id: Snowflake
   /// Either 0 (role) or 1 (member)

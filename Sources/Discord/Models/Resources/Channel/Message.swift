@@ -5,7 +5,7 @@ import Foundation
 
 /// Represents a message sent in a channel within Discord.
 /// - seealso: https://discord.com/developers/docs/resources/channel#message-object-message-structure
-public struct Message: Decodable {
+public struct Message: Codable {
   /// ID of the message
   public let id: Snowflake
   /// ID of the channel the message was sent in

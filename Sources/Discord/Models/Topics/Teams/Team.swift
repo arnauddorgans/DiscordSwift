@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/topics/teams#data-models-team-object
-public struct Team: Decodable {
+public struct Team: Codable {
   /// A hash of the image of the team's icon
   public let icon: String?
   /// The unique id of the team

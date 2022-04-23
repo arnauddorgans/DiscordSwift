@@ -5,7 +5,7 @@ import Foundation
 
 /// Represents a sticker that can be sent in messages.
 /// - seealso: https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure
-public struct Sticker: Decodable {
+public struct Sticker: Codable {
   /// ID of the sticker
   public let id: Snowflake
   /// For standard stickers, id of the pack the sticker is from

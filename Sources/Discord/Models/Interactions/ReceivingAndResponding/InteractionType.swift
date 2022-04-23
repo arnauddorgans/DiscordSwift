@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
-public enum InteractionType: Int, Decodable {
+public enum InteractionType: Int, Codable {
   case ping = 1
   case applicationCommand = 2
   case messageComponent = 3

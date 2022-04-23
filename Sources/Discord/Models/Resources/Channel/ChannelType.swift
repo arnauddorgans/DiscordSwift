@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-public enum ChannelType: Int, Decodable {
+public enum ChannelType: Int, Codable {
   /// A text channel within a server
   case guildText = 0
   /// A direct message between users

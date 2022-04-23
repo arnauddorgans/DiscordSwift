@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/channel#message-object-message-types
-public enum MessageType: Int, Decodable {
+public enum MessageType: Int, Codable {
   case `default` = 0
   case recipientAdd = 1
   case recipientRemove = 2

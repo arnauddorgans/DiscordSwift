@@ -42,12 +42,13 @@ final class NetworkingServiceImpl: NetworkingService {
 }
 
 private extension NetworkingServiceImpl {
-  func url(path: String) -> URL {
-    URL(string: environmentService.apiBaseURL + "/" + environmentService.apiVersion.rawValue + path)!
+  func url(path: String) throws -> URL {
+    let string = environmentService.apiBaseURL + "/" + environmentService.apiVersion.rawValue + path
+    return try URL(string: string).unwrapped()
   }
   
   func urlRequest<T>(method: HTTPMethod, path: String, body: T) throws -> URLRequest where T: Encodable {
-    let url = url(path: path)
+    let url = try url(path: path)
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = method.rawValue
     if !(body is NoBody) {
@@ -63,33 +64,6 @@ private extension NetworkingServiceImpl {
       }
     }
     return urlRequest
-  }
-}
-
-private extension DateFormatter {
-  static var iso8601: DateFormatter {
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .iso8601)
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
-    return formatter
-  }
-}
-
-private extension JSONEncoder {
-  static var iso8601: JSONEncoder {
-    let jsonEncoder = JSONEncoder()
-    jsonEncoder.dateEncodingStrategy = .formatted(.iso8601)
-    return jsonEncoder
-  }
-}
-
-private extension JSONDecoder {
-  static var iso8601: JSONDecoder {
-    let jsonDecoder = JSONDecoder()
-    jsonDecoder.dateDecodingStrategy = .formatted(.iso8601)
-    return jsonDecoder
   }
 }
 

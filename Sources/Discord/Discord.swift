@@ -9,17 +9,20 @@ public final class Discord {
   public let guildService: GuildService
   public let channelService: ChannelService
   public let imageURLService: ImageURLService
+  public let gatewayService: GatewayService
   
   init(authenticationService: AuthenticationService,
        userService: UserService,
        guildService: GuildService,
        channelService: ChannelService,
-       imageURLService: ImageURLService) {
+       imageURLService: ImageURLService,
+       gatewayService: GatewayService) {
     self.userService = userService
     self.authenticationService = authenticationService
     self.guildService = guildService
     self.channelService = channelService
     self.imageURLService = imageURLService
+    self.gatewayService = gatewayService
   }
 }
 
@@ -35,11 +38,15 @@ public extension Discord {
     let guildService = GuildServiceImpl(networkingService: networkingService)
     let channelService = ChannelServiceImpl(networkingService: networkingService)
     let imageURLService = ImageURLServiceImpl(environmentService: environmentService)
+    let gatewayService = GatewayServiceImpl(environmentService: environmentService,
+                                            authService: authenticationService,
+                                            networkingService: networkingService)
     return .init(authenticationService: authenticationService,
                  userService: userService,
                  guildService: guildService,
                  channelService: channelService,
-                 imageURLService: imageURLService)
+                 imageURLService: imageURLService,
+                 gatewayService: gatewayService)
   }()
   
   // MARK: - Authentication

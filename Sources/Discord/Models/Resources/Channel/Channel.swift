@@ -5,7 +5,7 @@ import Foundation
 
 /// Represents a guild or DM channel within Discord.
 /// - seealso: https://discord.com/developers/docs/resources/channel#channel-object-channel-structure
-public struct Channel: Decodable {
+public struct Channel: Codable {
   /// The id of this channel
   public let id: Snowflake
   /// The type of channel

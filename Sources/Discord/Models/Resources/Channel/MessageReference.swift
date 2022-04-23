@@ -5,7 +5,7 @@ import Foundation
 
 public extension Message {
   /// - seealso: https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure
-  struct Reference: Decodable {
+  struct Reference: Codable {
     /// ID of the originating message
     public let messageID: Snowflake?
     /// ID of the originating message's channel
