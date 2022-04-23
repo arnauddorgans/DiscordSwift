@@ -16,13 +16,13 @@ final class GatewayServiceImpl: NSObject {
   private let environmentService: EnvironmentService
   private let networkingService: NetworkingService
   private let authService: AuthenticationService
+  private let webSocketService: WebSocketService
   
   private lazy var jsonDecoder: JSONDecoder = .iso8601
   private lazy var jsonEncoder: JSONEncoder = .iso8601
   
   private var connectTask: Task<Void, Error>?
   private var heartbeatTask: Task<Void, Error>?
-  private var socketTask: URLSessionWebSocketTask?
   
   @Published private var helloData: GatewayHello?
   @Published private var readyData: GatewayReady?
@@ -37,10 +37,12 @@ final class GatewayServiceImpl: NSObject {
   
   init(environmentService: EnvironmentService,
        authService: AuthenticationService,
-       networkingService: NetworkingService) {
+       networkingService: NetworkingService,
+       webSocketService: WebSocketService) {
     self.environmentService = environmentService
     self.authService = authService
     self.networkingService = networkingService
+    self.webSocketService = webSocketService
   }
 }
 
@@ -57,29 +59,17 @@ extension GatewayServiceImpl: GatewayService {
       case .botToken: gateway = try await getGatewayBot().url
       }
       let gatewayURL = try gatewayURL(url: gateway)
-      socketTask = URLSession.shared.webSocketTask(with: gatewayURL)
-      socketTask?.delegate = self
-      socketTask?.resume()
-      try await readMessage()
+      try await webSocketService.connect(url: gatewayURL, handle: { [weak self] data in
+        self?.handleMessage(data: data)
+      }, onClose: { _ in
+        
+      })
     }
   }
 }
 
 // MARK: Message
 private extension GatewayServiceImpl {
-  func readMessage() async throws {
-    let socketTask = try socketTask.unwrapped()
-    let message = try await socketTask.receive()
-    let messageData: Data
-    switch message {
-    case let .data(data):     messageData = data
-    case let .string(string): messageData = Data(string.utf8)
-    @unknown default: fatalError()
-    }
-    handleMessage(data: messageData)
-    try await readMessage()
-  }
-  
   private func handleMessage(data: Data) {
     do {
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
@@ -114,7 +104,7 @@ private extension GatewayServiceImpl {
   
   func sendMessage(payload: GatewayPayload) async throws {
     let data = try jsonEncoder.encode(payload)
-    try await socketTask?.send(.data(data))
+    try await webSocketService.send(data: data)
   }
 }
 
@@ -203,8 +193,6 @@ extension GatewayServiceImpl {
     // Tasks
     connectTask?.cancel()
     connectTask = nil
-    socketTask?.cancel()
-    socketTask = nil
     heartbeatTask?.cancel()
     heartbeatTask = nil
     // Data
@@ -212,16 +200,5 @@ extension GatewayServiceImpl {
     helloData = nil
     readyData = nil
     lastPayload = nil
-  }
-}
-
-// MARK: URLSessionTaskDelegate
-extension GatewayServiceImpl: URLSessionWebSocketDelegate {
-  func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-
-  }
-  
-  func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-    cleanUp()
   }
 }

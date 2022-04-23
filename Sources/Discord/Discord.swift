@@ -38,9 +38,15 @@ public extension Discord {
     let guildService = GuildServiceImpl(networkingService: networkingService)
     let channelService = ChannelServiceImpl(networkingService: networkingService)
     let imageURLService = ImageURLServiceImpl(environmentService: environmentService)
+    #if canImport(WebSocketKit)
+    let webSocketService = WebSocketServiceImpl()
+    #else
+    let webSocketService = WebSocketServiceImpl()
+    #endif
     let gatewayService = GatewayServiceImpl(environmentService: environmentService,
                                             authService: authenticationService,
-                                            networkingService: networkingService)
+                                            networkingService: networkingService,
+                                            webSocketService: webSocketService)
     return .init(authenticationService: authenticationService,
                  userService: userService,
                  guildService: guildService,
