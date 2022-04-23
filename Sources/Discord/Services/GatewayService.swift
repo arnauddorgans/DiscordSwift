@@ -4,10 +4,13 @@
 import Foundation
 
 public protocol GatewayService {
-  var isConnected: CurrentValueSubject<Bool> { get }
-  var isReady: CurrentValueSubject<Bool> { get }
+  var isConnected: Bool { get }
+  var isConnectedPublisher: AnyPublisher<Bool, Never> { get }
   
-  var didReceiveEvent: PassthroughSubject<GatewayEvent> { get }
+  var isReady: Bool { get }
+  var isReadyPublisher: AnyPublisher<Bool, Never> { get }
+  
+  var didReceiveEvent: AnyPublisher<GatewayEvent, Never> { get }
   
   func connect(intents: GatewayIntents)
 }
@@ -30,10 +33,7 @@ final class GatewayServiceImpl: NSObject {
   
   private var intents: GatewayIntents = []
   
-  let isConnected: CurrentValueSubject<Bool> = .init(false)
-  let isReady: CurrentValueSubject<Bool> = .init(false)
-  
-  let didReceiveEvent: PassthroughSubject<GatewayEvent> = .init()
+  private let didReceiveEventSubject: PassthroughSubject<GatewayEvent, Never> = .init()
   
   init(environmentService: EnvironmentService,
        authService: AuthenticationService,
@@ -48,6 +48,14 @@ final class GatewayServiceImpl: NSObject {
 
 // MARK: GatewayService
 extension GatewayServiceImpl: GatewayService {
+  var isConnected: Bool { helloData != nil }
+  var isConnectedPublisher: AnyPublisher<Bool, Never> { $helloData.map { $0 != nil }.eraseToAnyPublisher() }
+  
+  var isReady: Bool { readyData != nil }
+  var isReadyPublisher: AnyPublisher<Bool, Never> { $readyData.map { $0 != nil }.eraseToAnyPublisher() }
+  
+  var didReceiveEvent: AnyPublisher<GatewayEvent, Never> { didReceiveEventSubject.eraseToAnyPublisher() }
+  
   func connect(intents: GatewayIntents) {
     cleanUp()
     self.intents = intents
@@ -94,7 +102,7 @@ private extension GatewayServiceImpl {
       }
       lastPayload = payload
       if let event = event {
-        didReceiveEvent.send(event)
+        didReceiveEventSubject.send(event)
       }
       print(payload)
     } catch {

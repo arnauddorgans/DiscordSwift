@@ -2,18 +2,60 @@
 // 
 
 import Foundation
-
+#if canImport(Combine)
+import Combine
+public typealias AnyPublisher = Combine.AnyPublisher
+public typealias PassthroughSubject = Combine.PassthroughSubject
+#else
 public protocol Publisher {
   associatedtype Output
+  associatedtype Failure: Error
   
   func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable
+}
+
+public extension Publisher {
+  func eraseToAnyPublisher() -> AnyPublisher<Output, Failure> {
+    .init(publisher: self)
+  }
+}
+
+extension Publisher {
+  func map<T>(_ transform: @escaping (Output) -> T) -> MapPublisher<Self, T, Failure> {
+    .init(publisher: self, map: transform)
+  }
 }
 
 public protocol Cancellable {
   func cancel()
 }
 
-public final class CurrentValueSubject<Output>: Publisher {
+struct MapPublisher<T, Output, Failure>: Publisher where T: Publisher, T.Failure == Failure {
+  let publisher: T
+  let map: (T.Output) -> Output
+  
+  func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+    publisher.sink(receiveValue: {
+      receiveValue(map($0))
+    })
+  }
+}
+
+public struct AnyPublisher<Output, Failure>: Publisher where Failure: Error {
+  private let sink: (@escaping (Output) -> Void) -> Cancellable
+  
+  init<T>(publisher: T) where T: Publisher, T.Output == Output {
+    sink = {
+      publisher.sink(receiveValue: $0)
+    }
+  }
+  
+  public func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+    sink(receiveValue)
+  }
+}
+
+public final class CurrentValueSubject<Output, Failure>: Publisher where Failure: Error {
   private let subscriptionBox: SubscriptionBox<Output> = .init()
   public var value: Output {
     willSet { sendAll(newValue: newValue) }
@@ -41,7 +83,7 @@ public final class CurrentValueSubject<Output>: Publisher {
   }
 }
 
-public final class PassthroughSubject<Output>: Publisher {
+public final class PassthroughSubject<Output, Failure>: Publisher where Failure: Error {
   private let subscriptionBox: SubscriptionBox<Output> = .init()
 
   public init() { }
@@ -92,3 +134,19 @@ private struct AnyCancellable: Cancellable {
     onCancel()
   }
 }
+
+@propertyWrapper
+struct Published<T> {
+  private let currentValueSubject: CurrentValueSubject<T, Never>
+  var wrappedValue: T {
+    get { currentValueSubject.value }
+    set { currentValueSubject.value = newValue }
+  }
+  
+  var projectedValue: CurrentValueSubject<T, Never> { currentValueSubject }
+  
+  init(wrappedValue: T) {
+    currentValueSubject = .init(wrappedValue)
+  }
+}
+#endif
