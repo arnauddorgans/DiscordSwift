@@ -32,7 +32,19 @@ final class NetworkingServiceImpl: NetworkingService {
   func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
     let urlSession = URLSession.shared
     let urlRequest = try urlRequest(method: method, path: path, body: body)
-    let response = try await urlSession.data(for: urlRequest, delegate: nil)
+    let response: (Data, URLResponse) = try await withCheckedThrowingContinuation { continuation in
+      urlSession.dataTask(with: urlRequest, completionHandler: { data, urlResponse, error in
+        if let error = error {
+          continuation.resume(throwing: error)
+        } else {
+          do {
+            try continuation.resume(returning: (data.unwrapped(), urlResponse.unwrapped()))
+          } catch {
+            continuation.resume(throwing: error)
+          }
+        }
+      })
+    }
     let httpURLResponse = try (response.1 as? HTTPURLResponse).unwrapped()
     let httpResponseCode = try HTTPResponseCode(rawValue: httpURLResponse.statusCode).unwrapped()
     if httpResponseCode.isError {
