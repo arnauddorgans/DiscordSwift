@@ -34,7 +34,7 @@ final class WebSocketServiceImpl: WebSocketService {
   }
   
   private func handleClose(webSocket: WebSocket, onClose: @escaping (Int) -> Void) {
-    guard let closeCode = ws.closeCode, webSocket === self.webSocket else { return }
+    guard let closeCode = webSocket.closeCode, webSocket === self.webSocket else { return }
     let raw = UInt16(webSocketErrorCode: closeCode)
     onClose(Int(raw))
   }
