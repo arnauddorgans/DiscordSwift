@@ -8,6 +8,7 @@ import Foundation
 #else
 final class WebSocketServiceImpl: NSObject, WebSocketService {
   private var handleData: ((Data) -> Void)?
+  private var didConnect: ((Result<Void, Error>) -> Void)?
   private var onClose: ((Int) -> Void)?
   private var socketTask: URLSessionWebSocketTask?
   
@@ -16,7 +17,10 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
     handleData = handle
     socketTask = URLSession.shared.webSocketTask(with: url)
     socketTask?.delegate = self
-    socketTask?.resume()
+    try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+      didConnect = continuation.resume(with:)
+      socketTask?.resume()
+    })
     Task {
       try await readMessage()
     }
@@ -43,10 +47,17 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
 
 // MARK: URLSessionTaskDelegate
 extension WebSocketServiceImpl: URLSessionWebSocketDelegate {
-  func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) { }
+  func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+    didConnect?(.success(()))
+  }
   
   func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
     onClose?(closeCode.rawValue)
+  }
+  
+  func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    guard let error = error else { return }
+    didConnect?(.failure(error))
   }
 }
 #endif

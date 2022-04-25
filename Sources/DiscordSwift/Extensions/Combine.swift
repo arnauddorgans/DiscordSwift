@@ -108,6 +108,12 @@ public final class PassthroughSubject<Output, Failure>: Publisher where Failure:
   }
 }
 
+public extension PassthroughSubject where Output == Void {
+  func send() {
+    send(())
+  }
+}
+
 // MARK: Subscription
 private final class SubscriptionBox<Output> {
   var subscriptions: [Subscription<Output>] = []
@@ -127,11 +133,22 @@ private struct Subscription<Output> {
   let receiveValue: (Output) -> Void
 }
 
-private struct AnyCancellable: Cancellable {
-  let onCancel: () -> Void
+private final class AnyCancellable: Cancellable {
+  private let onCancel: () -> Void
+  private var isCancelled: Bool = false
+  
+  init(onCancel: @escaping () -> Void) {
+    self.onCancel = onCancel
+  }
   
   func cancel() {
+    guard !isCancelled else { return }
+    isCancelled = true
     onCancel()
+  }
+  
+  deinit {
+    cancel()
   }
 }
 

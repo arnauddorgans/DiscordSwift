@@ -5,11 +5,11 @@ import Foundation
 
 public final class Discord {
   private let authenticationService: AuthenticationService
-  public let userService: UserService
-  public let guildService: GuildService
-  public let channelService: ChannelService
-  public let imageURLService: ImageURLService
-  public let gatewayService: GatewayService
+  private let userService: UserService
+  private let guildService: GuildService
+  private let channelService: ChannelService
+  private let imageURLService: ImageURLService
+  private let gatewayService: GatewayService
   
   init(authenticationService: AuthenticationService,
        userService: UserService,
@@ -28,8 +28,24 @@ public final class Discord {
 
 // MARK: Public
 public extension Discord {
+  private static var _shared: Discord?
+
   /// The shared discord instance.
-  static let shared: Discord = {
+  static var shared: Discord {
+    if let discord = _shared { return discord }
+    _shared = .init()
+    return _shared!
+  }
+  
+  var auth: AuthenticationService { authenticationService }
+  var user: UserService { userService }
+  var guild: GuildService { guildService }
+  var channel: ChannelService { channelService }
+  var imageURL: ImageURLService { imageURLService }
+  var gateway: GatewayService { gatewayService }
+  
+  /// Create new Discord instance
+  convenience init() {
     let environmentService = EnvironmentServiceImpl()
     let authenticationService = AuthenticationServiceImpl()
     let networkingService = NetworkingServiceImpl(environmentService: environmentService,
@@ -47,16 +63,11 @@ public extension Discord {
                                             authService: authenticationService,
                                             networkingService: networkingService,
                                             webSocketService: webSocketService)
-    return .init(authenticationService: authenticationService,
-                 userService: userService,
-                 guildService: guildService,
-                 channelService: channelService,
-                 imageURLService: imageURLService,
-                 gatewayService: gatewayService)
-  }()
-  
-  // MARK: - Authentication
-  func setAuthentication(_ authentication: Authentication?) {
-    authenticationService.setAuthentication(authentication)
+    self.init(authenticationService: authenticationService,
+              userService: userService,
+              guildService: guildService,
+              channelService: channelService,
+              imageURLService: imageURLService,
+              gatewayService: gatewayService)
   }
 }

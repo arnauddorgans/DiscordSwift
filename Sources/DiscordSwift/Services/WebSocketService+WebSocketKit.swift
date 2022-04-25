@@ -32,7 +32,7 @@ final class WebSocketServiceImpl: WebSocketService {
   
   func send(data: Data) async throws {
     let string = try String(data: data, encoding: stringEncoding).unwrapped()
-    try await webSocket?.send(string)
+    try await webSocket.unwrapped().send(string)
   }
 }
 #endif

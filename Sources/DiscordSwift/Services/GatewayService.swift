@@ -4,15 +4,10 @@
 import Foundation
 
 public protocol GatewayService {
-  var isConnected: Bool { get }
-  var isConnectedPublisher: AnyPublisher<Bool, Never> { get }
-  
-  var isReady: Bool { get }
-  var isReadyPublisher: AnyPublisher<Bool, Never> { get }
-  
   var didReceiveEvent: AnyPublisher<GatewayEvent, Never> { get }
+  var didClose: AnyPublisher<Void, Never> { get }
   
-  func connect(intents: GatewayIntents)
+  func connect(intents: GatewayIntents) async throws
 }
 
 final class GatewayServiceImpl: NSObject {
@@ -24,7 +19,6 @@ final class GatewayServiceImpl: NSObject {
   private lazy var jsonDecoder: JSONDecoder = .iso8601
   private lazy var jsonEncoder: JSONEncoder = .iso8601
   
-  private var connectTask: Task<Void, Error>?
   private var heartbeatTask: Task<Void, Error>?
   
   @Published private var helloData: GatewayHello?
@@ -34,7 +28,8 @@ final class GatewayServiceImpl: NSObject {
   private var intents: GatewayIntents = []
   
   private let didReceiveEventSubject: PassthroughSubject<GatewayEvent, Never> = .init()
-  
+  private let didCloseSubject: PassthroughSubject<Void, Never> = .init()
+
   init(environmentService: EnvironmentService,
        authService: AuthenticationService,
        networkingService: NetworkingService,
@@ -48,31 +43,23 @@ final class GatewayServiceImpl: NSObject {
 
 // MARK: GatewayService
 extension GatewayServiceImpl: GatewayService {
-  var isConnected: Bool { helloData != nil }
-  var isConnectedPublisher: AnyPublisher<Bool, Never> { $helloData.map { $0 != nil }.eraseToAnyPublisher() }
-  
-  var isReady: Bool { readyData != nil }
-  var isReadyPublisher: AnyPublisher<Bool, Never> { $readyData.map { $0 != nil }.eraseToAnyPublisher() }
-  
   var didReceiveEvent: AnyPublisher<GatewayEvent, Never> { didReceiveEventSubject.eraseToAnyPublisher() }
+  var didClose: AnyPublisher<Void, Never> { didCloseSubject.eraseToAnyPublisher() }
   
-  func connect(intents: GatewayIntents) {
+  func connect(intents: GatewayIntents) async throws {
     cleanUp()
     self.intents = intents
-    connectTask = Task {
-      let auth = try authService.authentication.unwrapped()
-      let gateway: URL
-      switch auth {
-      case .token:    gateway = try await getGateway().url
-      case .botToken: gateway = try await getGatewayBot().url
-      }
-      let gatewayURL = try gatewayURL(url: gateway)
-      try await webSocketService.connect(url: gatewayURL, handle: { [weak self] data in
-        self?.handleMessage(data: data)
-      }, onClose: { _ in
-        
-      })
+    let auth = try authService.authentication.unwrapped()
+    let gateway: URL
+    switch auth {
+    case .token:    gateway = try await getGateway().url
+    case .botToken: gateway = try await getGatewayBot().url
     }
+    let gatewayURL = try gatewayURL(url: gateway)
+    weak var weakSelf = self
+    try await webSocketService.connect(url: gatewayURL,
+                                       handle: { weakSelf?.handleMessage(data: $0) },
+                                       onClose: { _ in weakSelf?.didCloseSubject.send() })
   }
 }
 
@@ -199,8 +186,6 @@ extension GatewayServiceImpl {
   /// Cancel all tasks and cleanup data
   func cleanUp() {
     // Tasks
-    connectTask?.cancel()
-    connectTask = nil
     heartbeatTask?.cancel()
     heartbeatTask = nil
     // Data

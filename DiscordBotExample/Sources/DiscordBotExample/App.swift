@@ -2,27 +2,43 @@
 // 
 
 import Foundation
-import Discord
+import DiscordSwift
 import ArgumentParser
+import Combine
 
 @main
 struct App: AsyncParsableCommand {
   @Argument var token: String
   
   func run() async throws {
-    let discord = Discord.shared
-    let gateway = discord.gatewayService
-    discord.setAuthentication(.botToken(token))
-    gateway.connect(intents: [.guildMessages])
-    let cancellable = gateway.didReceiveEvent.sink(receiveValue: { event in
-      guard case let .messageCreate(message) = event, message.author.bot != true else { return }
-      Task {
-        try await discord.channelService.createMessage(channelID: message.channelID,
-                                                       draft: .init(message: message))
-      }
-    })
-    let _: Void = await withCheckedContinuation { _ in }
-    cancellable.cancel()
+    let discord: Discord = .shared
+    discord.auth.setAuthentication(.botToken(token))
+    let subscription = subscribeAndEchoMessages(discord: discord)
+    try await discord.gateway.connect(intents: [.guildMessages])
+    await waitUntilClose(discord: discord)
+    subscription.cancel()
+  }
+  
+  private func subscribeAndEchoMessages(discord: Discord) -> AnyCancellable {
+    discord.gateway.didReceiveEvent
+      .sink(receiveValue: { event in
+        guard case let .messageCreate(message) = event, message.author.bot != true else { return }
+        Task {
+          try await discord.channel.createMessage(channelID: message.channelID,
+                                                  draft: .init(message: message))
+        }
+      })
+  }
+  
+  /// Wait until gateway close
+  private func waitUntilClose(discord: Discord) async {
+    var cancellables: Set<AnyCancellable> = []
+    await withCheckedContinuation { continuation in
+      discord.gateway.didClose
+        .sink(receiveValue: { _ in continuation.resume() })
+        .store(in: &cancellables)
+    }
+    cancellables.removeAll()
   }
 }
 

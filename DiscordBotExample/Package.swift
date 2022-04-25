@@ -14,7 +14,7 @@ let package = Package(
   ],
   dependencies: [
     // Dependencies declare other packages that this package depends on.
-    .package(name: "Discord", path: "../"),
+    .package(name: "DiscordSwift", path: "../"),
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.1.2")
   ],
   targets: [
@@ -23,7 +23,7 @@ let package = Package(
     .executableTarget(
       name: "DiscordBotExample",
       dependencies: [
-        "Discord",
+        "DiscordSwift",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ])
   ]

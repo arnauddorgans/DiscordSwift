@@ -3,7 +3,7 @@
 
 import Foundation
 
-protocol AuthenticationService {
+public protocol AuthenticationService {
   var authentication: Authentication? { get }
   
   func setAuthentication(_ authentication: Authentication?)
