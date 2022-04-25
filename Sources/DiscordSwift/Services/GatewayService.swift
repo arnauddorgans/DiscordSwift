@@ -94,7 +94,7 @@ private extension GatewayServiceImpl {
 private extension GatewayServiceImpl {
   func handleMessage(data: Data) {
     do {
-      try print(String(data: data, encoding: .utf8).unwrapped())
+      try print("\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + String(data: data, encoding: .utf8).unwrapped())
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
       var event: GatewayEvent?
       switch payload.eventData {
