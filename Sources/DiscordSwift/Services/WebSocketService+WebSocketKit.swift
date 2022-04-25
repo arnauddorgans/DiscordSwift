@@ -16,7 +16,7 @@ final class WebSocketServiceImpl: WebSocketService {
                onClose: @escaping (Int) -> Void) async throws {
     let previousWebSocket = webSocket
     webSocket = nil
-    previousWebSocket?.close()
+    try? await previousWebSocket?.close()
     try await WebSocket.connect(to: url, on: eventLoopGroup) { [weak self] ws async -> Void in
       self?.webSocket = ws
       ws.onText { ws, string in
@@ -29,10 +29,7 @@ final class WebSocketServiceImpl: WebSocketService {
   }
   
   private func handleText(text: String, webSocket: WebSocket, handle: @escaping (Data) -> Void) {
-    guard let stringEncoding = self?.stringEncoding,
-          let data = string.data(using: stringEncoding),
-          webSocket === self.webSocket
-    else { return }
+    guard let data = text.data(using: stringEncoding), webSocket === self.webSocket else { return }
     handle(data)
   }
   
