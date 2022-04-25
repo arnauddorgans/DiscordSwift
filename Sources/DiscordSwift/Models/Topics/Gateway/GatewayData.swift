@@ -8,6 +8,8 @@ enum GatewayData {
   case hello(GatewayHello)
   case heartbeat(sequenceNumber: Int?)
   case identify(GatewayIdentify)
+  case resume(GatewayResume)
+  case resumed
   case ready(GatewayReady)
   case messageCreate(Message)
 }

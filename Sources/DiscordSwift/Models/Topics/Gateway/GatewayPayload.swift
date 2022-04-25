@@ -32,6 +32,9 @@ extension GatewayPayload: Decodable {
     case .identify:
       let identify = try container.decode(GatewayIdentify.self, forKey: .eventData)
       eventData = .identify(identify)
+    case .resume:
+      let resume = try container.decode(GatewayResume.self, forKey: .eventData)
+      eventData = .resume(resume)
     case .dispatch:
       switch eventName {
       case .ready:
@@ -40,6 +43,8 @@ extension GatewayPayload: Decodable {
       case .messageCreate:
         let message = try container.decode(Message.self, forKey: .eventData)
         eventData = .messageCreate(message)
+      case .resumed:
+        eventData = .resumed
       default:
         eventData = .none
       }
@@ -65,10 +70,14 @@ extension GatewayPayload: Encodable {
       try container.encode(sequenceNumber, forKey: .eventData)
     case let .identify(identify):
       try container.encode(identify, forKey: .eventData)
+    case let .resume(resume):
+      try container.encode(resume, forKey: .eventData)
     case let .ready(ready):
       try container.encode(ready, forKey: .eventData)
     case let .messageCreate(message):
       try container.encode(message, forKey: .eventData)
+    case .resumed:
+      break
     }
   }
 }

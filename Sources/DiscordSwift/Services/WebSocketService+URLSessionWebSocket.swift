@@ -15,8 +15,10 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
   func connect(url: URL, handle: @escaping (Data) -> Void, onClose: @escaping (Int) -> Void) async throws {
     self.onClose = onClose
     handleData = handle
+    let previousSocketTask = socketTask
     socketTask = URLSession.shared.webSocketTask(with: url)
     socketTask?.delegate = self
+    previousSocketTask?.cancel()
     try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
       didConnect = continuation.resume(with:)
       socketTask?.resume()
@@ -48,16 +50,30 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
 // MARK: URLSessionTaskDelegate
 extension WebSocketServiceImpl: URLSessionWebSocketDelegate {
   func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-    didConnect?(.success(()))
+    handleConnect(task: webSocketTask, result: .success(()))
   }
   
   func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-    onClose?(closeCode.rawValue)
+    handleClose(task: webSocketTask, closeCode: closeCode)
   }
   
   func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
     guard let error = error else { return }
-    didConnect?(.failure(error))
+    handleConnect(task: task, result: .failure(error))
+  }
+  
+  private func handleConnect(task: URLSessionTask, result: Result<Void, Error>) {
+    guard task === socketTask else { return }
+    let didConnect = didConnect
+    didConnect?(result)
+    self.didConnect = nil
+  }
+  
+  private func handleClose(task: URLSessionTask, closeCode: URLSessionWebSocketTask.CloseCode) {
+    guard task === socketTask else { return }
+    let onClose = onClose
+    onClose?(closeCode.rawValue)
+    self.onClose = nil
   }
 }
 #endif

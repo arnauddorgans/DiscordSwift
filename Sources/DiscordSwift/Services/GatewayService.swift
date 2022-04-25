@@ -21,8 +21,8 @@ final class GatewayServiceImpl: NSObject {
   
   private var heartbeatTask: Task<Void, Error>?
   
-  @Published private var helloData: GatewayHello?
-  @Published private var readyData: GatewayReady?
+  private var helloData: GatewayHello?
+  private var readyData: GatewayReady?
   private var lastPayload: GatewayPayload?
   
   private var intents: GatewayIntents = []
@@ -47,7 +47,13 @@ extension GatewayServiceImpl: GatewayService {
   var didClose: AnyPublisher<Void, Never> { didCloseSubject.eraseToAnyPublisher() }
   
   func connect(intents: GatewayIntents) async throws {
-    cleanUp()
+    try await connect(intents: intents, shouldCleanUp: true)
+  }
+  
+  private func connect(intents: GatewayIntents, shouldCleanUp: Bool) async throws {
+    if shouldCleanUp {
+      cleanUp()
+    }
     self.intents = intents
     let auth = try authService.authentication.unwrapped()
     let gateway: URL
@@ -59,21 +65,47 @@ extension GatewayServiceImpl: GatewayService {
     weak var weakSelf = self
     try await webSocketService.connect(url: gatewayURL,
                                        handle: { weakSelf?.handleMessage(data: $0) },
-                                       onClose: { _ in weakSelf?.didCloseSubject.send() })
+                                       onClose: { weakSelf?.handleClose(code: $0) })
+  }
+  
+  func reconnect() async throws {
+    try await connect(intents: intents, shouldCleanUp: false)
+  }
+}
+
+// MARK: Close
+private extension GatewayServiceImpl {
+  func handleClose(code: Int) {
+    let closeEvent = GatewayCloseEventCode(rawValue: code)
+    let shouldReconnect = closeEvent?.shouldReconnect ?? false
+    guard !shouldReconnect else {
+      // Reconnect
+      Task {
+        try await reconnect()
+      }
+      return
+    }
+    // Close
+    didCloseSubject.send()
   }
 }
 
 // MARK: Message
 private extension GatewayServiceImpl {
-  private func handleMessage(data: Data) {
+  func handleMessage(data: Data) {
     do {
+      try print(String(data: data, encoding: .utf8).unwrapped())
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
       var event: GatewayEvent?
       switch payload.eventData {
       case let .hello(hello):
         helloData = hello
         resetHeartbeat()
-        identify()
+        if let readyData = readyData {
+          resume(readyData: readyData)
+        } else {
+          identify()
+        }
       case .heartbeat:
         // The gateway may request a heartbeat from the client in some situations by sending an Opcode 1 Heartbeat.
         // When this occurs, the client should immediately send an Opcode 1 Heartbeat without waiting the remainder of the current interval.
@@ -84,10 +116,17 @@ private extension GatewayServiceImpl {
         event = .messageCreate(message)
       case .identify:
         break
+      case .resume:
+        break
+      case .resumed:
+        // Resume succeed
+        break
       case .none:
         break
       }
-      lastPayload = payload
+      if payload.sequenceNumber != nil {
+        lastPayload = payload
+      }
       if let event = event {
         didReceiveEventSubject.send(event)
       }
@@ -150,6 +189,26 @@ private extension GatewayServiceImpl {
                                                                     shard: nil,
                                                                     presence: nil,
                                                                     intents: intents)),
+                                         sequenceNumber: nil,
+                                         eventName: nil))
+  }
+}
+
+// MARK: Resume
+private extension GatewayServiceImpl {
+  func resume(readyData: GatewayReady) {
+    Task {
+      try await sendResumeMessage(readyData: readyData)
+    }
+  }
+  
+  private func sendResumeMessage(readyData: GatewayReady) async throws {
+    let token = try authService.authentication.unwrapped().stringValue
+    let sessionID = readyData.sessionID
+    try await sendMessage(payload: .init(op: .resume,
+                                         eventData: .resume(.init(token: token,
+                                                                  sessionID: sessionID,
+                                                                  sequenceNumber: lastPayload?.sequenceNumber)),
                                          sequenceNumber: nil,
                                          eventName: nil))
   }

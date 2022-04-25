@@ -14,20 +14,32 @@ final class WebSocketServiceImpl: WebSocketService {
   func connect(url: URL,
                handle: @escaping (Data) -> Void,
                onClose: @escaping (Int) -> Void) async throws {
+    let previousWebSocket = webSocket
+    webSocket = nil
+    previousWebSocket?.close()
     try await WebSocket.connect(to: url, on: eventLoopGroup) { [weak self] ws async -> Void in
       self?.webSocket = ws
       ws.onText { ws, string in
-        guard let stringEncoding = self?.stringEncoding,
-              let data = string.data(using: stringEncoding)
-        else { return }
-        handle(data)
+        self?.handleText(text: string, webSocket: ws, handle: handle)
       }
-      ws.onClose.whenComplete { result in
-        guard let closeCode = ws.closeCode else { return }
-        let raw = UInt16(webSocketErrorCode: closeCode)
-        onClose(Int(raw))
+      ws.onClose.whenComplete { _ in
+        self?.handleClose(webSocket: ws, onClose: onClose)
       }
     }
+  }
+  
+  private func handleText(text: String, webSocket: WebSocket, handle: @escaping (Data) -> Void) {
+    guard let stringEncoding = self?.stringEncoding,
+          let data = string.data(using: stringEncoding),
+          webSocket === self.webSocket
+    else { return }
+    handle(data)
+  }
+  
+  private func handleClose(webSocket: WebSocket, onClose: @escaping (Int) -> Void) {
+    guard let closeCode = ws.closeCode, webSocket === self.webSocket else { return }
+    let raw = UInt16(webSocketErrorCode: closeCode)
+    onClose(Int(raw))
   }
   
   func send(data: Data) async throws {
