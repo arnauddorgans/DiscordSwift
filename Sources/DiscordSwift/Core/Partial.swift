@@ -118,6 +118,6 @@ extension Partial: CustomReflectable {
     let children = keyValues.map { keyValue -> (String, Any) in
       (keyValue.key.stringValue, keyValue.value)
     }.sorted(by: { $0.0 < $1.0 })
-    return Mirror(self, children: children)
+    return Mirror(self, children: children, displayStyle: .struct)
   }
 }
