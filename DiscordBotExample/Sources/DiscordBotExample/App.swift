@@ -25,6 +25,9 @@ struct App: AsyncParsableCommand {
   private func subscribeAndEchoMessages(discord: Discord) -> AnyCancellable {
     discord.gateway.didReceiveEvent
       .sink(receiveValue: { event in
+        if case let .messageUpdate(message) = event {
+          print("update:\(message.content ?? "none")")
+        }
         guard case let .messageCreate(message) = event, message.author.bot != true else { return }
         Task {
           try await discord.channel.createMessage(channelID: message.channelID,
