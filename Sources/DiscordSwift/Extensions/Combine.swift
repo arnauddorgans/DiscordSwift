@@ -135,7 +135,7 @@ public extension PassthroughSubject where Output == Void {
 private final class SubscriptionBox<Output> {
   var subscriptions: [Subscription<Output>] = []
   
-  func add(subscriber: @escaping (Output) -> Void) -> (subscription: Subscription<Output>, cancellable: Cancellable) {
+  func add(subscriber: @escaping (Output) -> Void) -> (subscription: Subscription<Output>, cancellable: AnyCancellable) {
     let subscription = Subscription<Output>(receiveValue: subscriber)
     subscriptions.append(subscription)
     let cancellable = AnyCancellable { [weak self] in
