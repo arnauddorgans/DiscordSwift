@@ -10,7 +10,7 @@ public protocol PartialCodable {
 }
 
 public struct PartialMapper<T> where T: PartialCodable {
-  let keyPath: String
+  let keyPathHash: Int
   let valueType: Any.Type
   let decoder: PartialDecoder?
   let encoder: PartialEncoder?
@@ -36,14 +36,14 @@ public struct PartialMapper<T> where T: PartialCodable {
   init<Value>(keyPath: KeyPath<T, Value>,
               decoder: PartialDecoder?,
               encoder: PartialEncoder?) {
-    self.keyPath = keyPath.stringValue
+    self.keyPathHash = keyPath.hashValue
     self.valueType = Value.self
     self.decoder = decoder
     self.encoder = encoder
   }
   
   func isKeyPathEqual<Value>(to keyPath: KeyPath<T, Value>) -> Bool {
-    self.keyPath == keyPath.stringValue && valueType == Value.self
+    self.keyPathHash == keyPath.hashValue && valueType == Value.self
   }
 }
 
@@ -94,11 +94,5 @@ extension Partial: Encodable where T: Encodable {
     for (key, valueMapper) in values {
       try valueMapper.mapper.encoder.unwrapped().encode(valueMapper.value, into: &container, for: key)
     }
-  }
-}
-
-private extension KeyPath {
-  var stringValue: String {
-    NSExpression(forKeyPath: self).keyPath
   }
 }
