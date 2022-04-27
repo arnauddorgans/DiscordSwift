@@ -13,6 +13,7 @@ struct App: AsyncParsableCommand {
   @Argument var token: String
   
   func run() async throws {
+    print("Starting...")
     let discord: Discord = .shared
     discord.auth.setAuthentication(.botToken(token))
     let subscription = subscribeAndEchoMessages(discord: discord)
