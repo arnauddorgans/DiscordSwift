@@ -3,17 +3,19 @@
 
 import Foundation
 
+/// A protocol that allows an object to be partially decoded/encoded
 public protocol PartialCodable {
-  associatedtype CodingKeys: CodingKey, Hashable
+  associatedtype CodingKeys: CodingKey, Hashable, CaseIterable
   
   static func partialMapper(for key: CodingKeys) -> PartialMapper<Self>
 }
 
+/// Represents a binding between a CodingKey and a KeyPath
 public struct PartialMapper<T> where T: PartialCodable {
-  let keyPathHash: Int
-  let valueType: Any.Type
+  let keyPath: Any
   let decoder: PartialDecoder?
   let encoder: PartialEncoder?
+  let valueFrom: (T) -> Any
   
   public static func keyPath<Value>(_ keyPath: KeyPath<T, Value>) -> Self where Value: Decodable {
     self.init(keyPath: keyPath,
@@ -36,14 +38,14 @@ public struct PartialMapper<T> where T: PartialCodable {
   init<Value>(keyPath: KeyPath<T, Value>,
               decoder: PartialDecoder?,
               encoder: PartialEncoder?) {
-    self.keyPathHash = keyPath.hashValue
-    self.valueType = Value.self
+    self.keyPath = keyPath
     self.decoder = decoder
     self.encoder = encoder
+    self.valueFrom = { $0[keyPath: keyPath] }
   }
   
   func isKeyPathEqual<Value>(to keyPath: KeyPath<T, Value>) -> Bool {
-    self.keyPathHash == keyPath.hashValue && valueType == Value.self
+    self.keyPath as? KeyPath<T, Value> == keyPath
   }
 }
 
@@ -70,20 +72,33 @@ struct AnyPartialEncoder<Value>: PartialEncoder where Value: Encodable {
 
 @dynamicMemberLookup
 public struct Partial<T> where T: PartialCodable {
-  var values: [T.CodingKeys: (value: Any, mapper: PartialMapper<T>)] = [:]
+  private var keyValues: [T.CodingKeys: Any] = [:]
+  
+  public init() { }
+  
+  public init(_ object: T) {
+    keyValues = T.CodingKeys.allCases.reduce(into: [:]) { keyValues, key in
+      keyValues[key] = T.partialMapper(for: key).valueFrom(object)
+    }
+  }
   
   public subscript<S>(dynamicMember keyPath: KeyPath<T, S>) -> S? {
-    guard let value = values.first(where: { $0.value.mapper.isKeyPathEqual(to: keyPath) }) else { return nil }
-    return value as? S
+    get {
+      guard let value = keyValues.first(where: { T.partialMapper(for: $0.key).isKeyPathEqual(to: keyPath) })?.value else { return nil }
+      return value as? S
+    } set {
+      guard let key = T.CodingKeys.allCases.first(where: { T.partialMapper(for: $0).isKeyPathEqual(to: keyPath) }) else { return }
+      keyValues[key] = newValue
+    }
   }
 }
 
 extension Partial: Decodable where T: Decodable {
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: T.CodingKeys.self)
-    values = try container.allKeys.reduce(into: [:]) { (values, key) in
-      let mapper = T.partialMapper(for: key)
-      values[key] = (try mapper.decoder.unwrapped().decode(from: container, for: key), mapper)
+    keyValues = try container.allKeys.reduce(into: [:]) { (values, key) in
+      let decoder = try T.partialMapper(for: key).decoder.unwrapped()
+      values[key] = try decoder.decode(from: container, for: key)
     }
   }
 }
@@ -91,8 +106,18 @@ extension Partial: Decodable where T: Decodable {
 extension Partial: Encodable where T: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: T.CodingKeys.self)
-    for (key, valueMapper) in values {
-      try valueMapper.mapper.encoder.unwrapped().encode(valueMapper.value, into: &container, for: key)
+    for (key, value) in keyValues {
+      let mapper = T.partialMapper(for: key)
+      try mapper.encoder.unwrapped().encode(value, into: &container, for: key)
     }
+  }
+}
+
+extension Partial: CustomReflectable {
+  public var customMirror: Mirror {
+    let children = keyValues.map { keyValue -> (String, Any) in
+      (keyValue.key.stringValue, keyValue.value)
+    }.sorted(by: { $0.0 < $1.0 })
+    return Mirror(self, children: children)
   }
 }

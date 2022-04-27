@@ -76,7 +76,7 @@ public struct Message: Codable {
 }
 
 extension Message {
-  public enum CodingKeys: String, CodingKey {
+  public enum CodingKeys: String, CodingKey, CaseIterable {
     case id
     case channelID = "channel_id"
     case guildID = "guild_id"
