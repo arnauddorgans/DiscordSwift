@@ -46,6 +46,9 @@ extension GatewayPayload: Decodable {
       case .messageCreate:
         let message = try container.decode(Message.self, forKey: .eventData)
         eventData = .messageCreate(message)
+      case .messageDelete:
+        let messageDelete = try container.decode(GatewayMessageDelete.self, forKey: .eventData)
+        eventData = .messageDelete(messageDelete)
       case .resumed:
         eventData = .resumed
       default:
@@ -79,6 +82,10 @@ extension GatewayPayload: Encodable {
       try container.encode(ready, forKey: .eventData)
     case let .messageCreate(message):
       try container.encode(message, forKey: .eventData)
+    case let .messageUpdate(message):
+      try container.encode(message, forKey: .eventData)
+    case let .messageDelete(messageDelete):
+      try container.encode(messageDelete, forKey: .eventData)
     case let .invalidSession(resumable: resumable):
       try container.encode(resumable, forKey: .eventData)
     case .resumed:

@@ -118,6 +118,10 @@ private extension GatewayServiceImpl {
         readyData = ready
       case let .messageCreate(message):
         event = .messageCreate(message)
+      case let .messageUpdate(message):
+        event = .messageUpdate(message)
+      case let .messageDelete(messageDelete):
+        event = .messageDelete(messageDelete)
       case let .invalidSession(resumable: resumable):
         if resumable {
           reconnect()
