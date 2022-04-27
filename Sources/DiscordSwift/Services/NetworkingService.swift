@@ -7,13 +7,31 @@ import FoundationNetworking
 #endif
 
 protocol NetworkingService {
-  func request(method: HTTPMethod, path: String) async throws
+  func request(method: HTTPMethod, path: String, queryItems: [URLQueryItem]) async throws
   
-  func request<Body>(method: HTTPMethod, path: String, body: Body) async throws where Body: Encodable
+  func request<Body>(method: HTTPMethod, path: String, queryItems: [URLQueryItem], body: Body) async throws where Body: Encodable
   
-  func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable
+  func request<Response>(method: HTTPMethod, path: String, queryItems: [URLQueryItem]) async throws -> Response where Response: Decodable
   
-  func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable
+  func request<Body, Response>(method: HTTPMethod, path: String, queryItems: [URLQueryItem], body: Body) async throws -> Response where Body: Encodable, Response: Decodable
+}
+
+extension NetworkingService {
+  func request(method: HTTPMethod, path: String) async throws {
+    try await request(method: method, path: path, queryItems: [])
+  }
+  
+  func request<Body>(method: HTTPMethod, path: String, body: Body) async throws where Body: Encodable {
+    try await request(method: method, path: path, queryItems: [], body: body)
+  }
+  
+  func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable {
+    try await request(method: method, path: path, queryItems: [])
+  }
+  
+  func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
+    try await request(method: method, path: path, queryItems: [], body: body)
+  }
 }
 
 final class NetworkingServiceImpl: NetworkingService {
@@ -27,21 +45,21 @@ final class NetworkingServiceImpl: NetworkingService {
     self.authenticationService = authenticationService
   }
   
-  func request(method: HTTPMethod, path: String) async throws {
-    let _: NoBody = try await request(method: method, path: path)
+  func request(method: HTTPMethod, path: String, queryItems: [URLQueryItem]) async throws {
+    let _: NoBody = try await request(method: method, path: path, queryItems: queryItems)
   }
   
-  func request<Body>(method: HTTPMethod, path: String, body: Body) async throws where Body : Encodable {
-    let _: NoBody = try await request(method: method, path: path, body: body)
+  func request<Body>(method: HTTPMethod, path: String, queryItems: [URLQueryItem], body: Body) async throws where Body : Encodable {
+    let _: NoBody = try await request(method: method, path: path, queryItems: queryItems, body: body)
   }
   
-  func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable {
-    try await request(method: method, path: path, body: NoBody())
+  func request<Response>(method: HTTPMethod, path: String, queryItems: [URLQueryItem]) async throws -> Response where Response: Decodable {
+    try await request(method: method, path: path, queryItems: queryItems, body: NoBody())
   }
   
-  func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
+  func request<Body, Response>(method: HTTPMethod, path: String, queryItems: [URLQueryItem], body: Body) async throws -> Response where Body: Encodable, Response: Decodable {
     let urlSession = URLSession.shared
-    let urlRequest = try urlRequest(method: method, path: path, body: body)
+    let urlRequest = try urlRequest(method: method, path: path, queryItems: queryItems, body: body)
     let dataResponse = try await urlSession.dataResponse(for: urlRequest)
     let httpURLResponse = try (dataResponse.response as? HTTPURLResponse).unwrapped()
     let httpResponseCode = try HTTPResponseCode(rawValue: httpURLResponse.statusCode).unwrapped()
@@ -59,13 +77,15 @@ final class NetworkingServiceImpl: NetworkingService {
 }
 
 private extension NetworkingServiceImpl {
-  func url(path: String) throws -> URL {
+  func url(path: String, queryItems: [URLQueryItem]) throws -> URL {
     let string = environmentService.apiBaseURL + "/" + environmentService.apiVersion.rawValue + path
-    return try URL(string: string).unwrapped()
+    var urlComponents = try URLComponents(string: string).unwrapped()
+    urlComponents.queryItems = (urlComponents.queryItems ?? []) + queryItems
+    return try urlComponents.url.unwrapped()
   }
   
-  func urlRequest<T>(method: HTTPMethod, path: String, body: T) throws -> URLRequest where T: Encodable {
-    let url = try url(path: path)
+  func urlRequest<T>(method: HTTPMethod, path: String, queryItems: [URLQueryItem], body: T) throws -> URLRequest where T: Encodable {
+    let url = try url(path: path, queryItems: queryItems)
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = method.rawValue
     if !(body is NoBody) {
