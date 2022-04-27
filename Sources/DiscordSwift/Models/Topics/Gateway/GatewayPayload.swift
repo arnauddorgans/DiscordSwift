@@ -46,6 +46,9 @@ extension GatewayPayload: Decodable {
       case .messageCreate:
         let message = try container.decode(Message.self, forKey: .eventData)
         eventData = .messageCreate(message)
+      case .messageUpdate:
+        let message = try container.decode(Message.self, forKey: .eventData)
+        eventData = .messageUpdate(message)
       case .messageDelete:
         let messageDelete = try container.decode(GatewayMessageDelete.self, forKey: .eventData)
         eventData = .messageDelete(messageDelete)
