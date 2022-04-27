@@ -99,8 +99,7 @@ private extension GatewayServiceImpl {
 private extension GatewayServiceImpl {
   func handleMessage(data: Data) {
     do {
-      print("------------------------")
-      try print("\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + String(data: data, encoding: .utf8).unwrapped())
+      try print("------------------------\n\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + String(data: data, encoding: .utf8).unwrapped())
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
       var event: GatewayEvent?
       switch payload.eventData {
@@ -148,15 +147,14 @@ private extension GatewayServiceImpl {
       if let event = event {
         didReceiveEventSubject.send(event)
       }
-      print("RECEIVE: \(payload)")
+      print("------------------------\nRECEIVE: \(payload)")
     } catch {
       print(error)
     }
   }
   
   func sendMessage(payload: GatewayPayload) async throws {
-    print("------------------------")
-    print("SEND: \(payload)")
+    print("------------------------\nSEND: \(payload)")
     let data = try jsonEncoder.encode(payload)
     try await webSocketService.send(data: data)
   }
