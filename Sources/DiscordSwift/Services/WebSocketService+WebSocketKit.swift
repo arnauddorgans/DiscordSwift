@@ -17,7 +17,7 @@ final class WebSocketServiceImpl: WebSocketService {
     let previousWebSocket = webSocket
     webSocket = nil
     try? await previousWebSocket?.close()
-    try await WebSocket.connect(to: url, on: eventLoopGroup) { [weak self] ws async -> Void in
+    try await WebSocket.connect(to: url, on: eventLoopGroup) { [weak self] ws -> Void in
       self?.webSocket = ws
       ws.onText { ws, string in
         self?.handleText(text: string, webSocket: ws, handle: handle)
@@ -25,7 +25,7 @@ final class WebSocketServiceImpl: WebSocketService {
       ws.onClose.whenComplete { _ in
         self?.handleClose(webSocket: ws, onClose: onClose)
       }
-    }
+    }.get()
   }
   
   private func handleText(text: String, webSocket: WebSocket, handle: @escaping (Data) -> Void) {
