@@ -36,9 +36,12 @@ struct App: AsyncParsableCommand {
   /// Wait until gateway close
   private func waitUntilClose(discord: Discord) async {
     var cancellables: Set<AnyCancellable> = []
-    await withCheckedContinuation { continuation in
+    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
       discord.gateway.didClose
-        .sink(receiveValue: { _ in continuation.resume() })
+        .sink(receiveValue: {
+          print("Close")
+          continuation.resume()
+        })
         .store(in: &cancellables)
     }
     cancellables.removeAll()
