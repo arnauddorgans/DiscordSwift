@@ -70,6 +70,7 @@ extension GatewayServiceImpl: GatewayService {
   
   func reconnect() {
     Task {
+      try await Task.sleep(nanoseconds: 1_000_000_000 * .random(in: 1...5))
       try await connect(intents: intents, shouldCleanUp: false)
     }
   }
@@ -98,6 +99,7 @@ private extension GatewayServiceImpl {
 private extension GatewayServiceImpl {
   func handleMessage(data: Data) {
     do {
+      print("------------------------")
       try print("\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + String(data: data, encoding: .utf8).unwrapped())
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
       var event: GatewayEvent?
@@ -146,13 +148,15 @@ private extension GatewayServiceImpl {
       if let event = event {
         didReceiveEventSubject.send(event)
       }
-      print(payload)
+      print("RECEIVE: \(payload)")
     } catch {
       print(error)
     }
   }
   
   func sendMessage(payload: GatewayPayload) async throws {
+    print("------------------------")
+    print("SEND: \(payload)")
     let data = try jsonEncoder.encode(payload)
     try await webSocketService.send(data: data)
   }
