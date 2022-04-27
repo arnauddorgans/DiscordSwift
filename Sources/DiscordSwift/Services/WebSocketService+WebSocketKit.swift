@@ -43,5 +43,10 @@ final class WebSocketServiceImpl: WebSocketService {
     let string = try String(data: data, encoding: stringEncoding).unwrapped()
     try await webSocket.unwrapped().send(string)
   }
+  
+  func close() async throws {
+    let webSocket = try webSocket.unwrapped()
+    try await webSocket.close(code: .goingAway)
+  }
 }
 #endif

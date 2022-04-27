@@ -28,6 +28,11 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
     }
   }
   
+  func close() async throws {
+    let socketTask = try socketTask.unwrapped()
+    socketTask.cancel(with: .goingAway, reason: nil)
+  }
+  
   func send(data: Data) async throws {
     let socketTask = try socketTask.unwrapped()
     try await socketTask.send(.data(data))

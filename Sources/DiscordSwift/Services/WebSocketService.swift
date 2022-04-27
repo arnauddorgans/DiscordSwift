@@ -9,4 +9,6 @@ protocol WebSocketService {
                onClose: @escaping (Int) -> Void) async throws
   
   func send(data: Data) async throws
+  
+  func close() async throws
 }

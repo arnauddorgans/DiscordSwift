@@ -68,22 +68,26 @@ extension GatewayServiceImpl: GatewayService {
                                        onClose: { weakSelf?.handleClose(code: $0) })
   }
   
-  func reconnect() async throws {
-    try await connect(intents: intents, shouldCleanUp: false)
+  func reconnect() {
+    Task {
+      try await connect(intents: intents, shouldCleanUp: false)
+    }
   }
 }
 
 // MARK: Close
 private extension GatewayServiceImpl {
+  func close() {
+    Task {
+      try await webSocketService.close()
+    }
+  }
+  
   func handleClose(code: Int) {
     let closeEvent = GatewayCloseEventCode(rawValue: code)
     let shouldReconnect = closeEvent?.shouldReconnect ?? false
     guard !shouldReconnect else {
-      // Reconnect
-      Task {
-        try await reconnect()
-      }
-      return
+      return reconnect()
     }
     // Close
     didCloseSubject.send()
@@ -114,6 +118,12 @@ private extension GatewayServiceImpl {
         readyData = ready
       case let .messageCreate(message):
         event = .messageCreate(message)
+      case let .invalidSession(resumable: resumable):
+        if resumable {
+          reconnect()
+        } else {
+          close()
+        }
       case .identify:
         break
       case .resume:
