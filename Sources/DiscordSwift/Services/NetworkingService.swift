@@ -7,10 +7,12 @@ import FoundationNetworking
 #endif
 
 protocol NetworkingService {
-  @discardableResult
+  func request(method: HTTPMethod, path: String) async throws
+  
+  func request<Body>(method: HTTPMethod, path: String, body: Body) async throws where Body: Encodable
+  
   func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable
   
-  @discardableResult
   func request<Body, Response>(method: HTTPMethod, path: String, body: Body) async throws -> Response where Body: Encodable, Response: Decodable
 }
 
@@ -23,6 +25,14 @@ final class NetworkingServiceImpl: NetworkingService {
   init(environmentService: EnvironmentService, authenticationService: AuthenticationService) {
     self.environmentService = environmentService
     self.authenticationService = authenticationService
+  }
+  
+  func request(method: HTTPMethod, path: String) async throws {
+    let _: NoBody = try await request(method: method, path: path)
+  }
+  
+  func request<Body>(method: HTTPMethod, path: String, body: Body) async throws where Body : Encodable {
+    let _: NoBody = try await request(method: method, path: path, body: body)
   }
   
   func request<Response>(method: HTTPMethod, path: String) async throws -> Response where Response: Decodable {
@@ -39,7 +49,11 @@ final class NetworkingServiceImpl: NetworkingService {
       let error = try jsonDecoder.decode(ErrorMessage.self, from: dataResponse.data)
       throw error
     } else {
-      return try jsonDecoder.decode(Response.self, from: dataResponse.data)
+      if Response.self == NoBody.self {
+        return try (NoBody() as? Response).unwrapped()
+      } else {
+        return try jsonDecoder.decode(Response.self, from: dataResponse.data)
+      }
     }
   }
 }
@@ -70,7 +84,7 @@ private extension NetworkingServiceImpl {
   }
 }
 
-private struct NoBody: Encodable { }
+private struct NoBody: Codable { }
 
 // MARK: Async Helpers
 private extension URLSession {
