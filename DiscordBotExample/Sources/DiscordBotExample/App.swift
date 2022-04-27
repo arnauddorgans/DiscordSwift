@@ -4,7 +4,9 @@
 import Foundation
 import DiscordSwift
 import ArgumentParser
+#if canImport(Combine)
 import Combine
+#endif
 
 @main
 struct App: AsyncParsableCommand {

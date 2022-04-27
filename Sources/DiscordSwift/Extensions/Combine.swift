@@ -133,15 +133,15 @@ private struct Subscription<Output> {
   let receiveValue: (Output) -> Void
 }
 
-private final class AnyCancellable: Cancellable {
+public final class AnyCancellable: Cancellable {
   private let onCancel: () -> Void
   private var isCancelled: Bool = false
   
-  init(onCancel: @escaping () -> Void) {
+  public init(_ onCancel: @escaping () -> Void) {
     self.onCancel = onCancel
   }
   
-  func cancel() {
+  public func cancel() {
     guard !isCancelled else { return }
     isCancelled = true
     onCancel()
