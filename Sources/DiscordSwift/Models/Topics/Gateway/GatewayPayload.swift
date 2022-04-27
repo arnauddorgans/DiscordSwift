@@ -38,6 +38,8 @@ extension GatewayPayload: Decodable {
     case .invalidSession:
       let resumable = try container.decode(Bool.self, forKey: .eventData)
       eventData = .invalidSession(resumable: resumable)
+    case .reconnect:
+      eventData = .reconnect
     case .dispatch:
       switch eventName {
       case .ready:
@@ -91,7 +93,7 @@ extension GatewayPayload: Encodable {
       try container.encode(messageDelete, forKey: .eventData)
     case let .invalidSession(resumable: resumable):
       try container.encode(resumable, forKey: .eventData)
-    case .resumed:
+    case .resumed, .reconnect:
       break
     }
   }

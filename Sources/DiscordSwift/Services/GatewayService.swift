@@ -116,6 +116,8 @@ private extension GatewayServiceImpl {
         resetHeartbeat(wait: false)
       case let .ready(ready):
         readyData = ready
+      case .reconnect:
+        reconnect()
       case let .messageCreate(message):
         event = .messageCreate(message)
       case let .messageUpdate(message):
