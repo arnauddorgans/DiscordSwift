@@ -12,7 +12,7 @@ enum GatewayData {
   case resumed
   case ready(GatewayReady)
   case messageCreate(Message)
-  case messageUpdate(Message)
+  case messageUpdate(Partial<Message>)
   case messageDelete(GatewayMessageDelete)
   case invalidSession(resumable: Bool)
 }

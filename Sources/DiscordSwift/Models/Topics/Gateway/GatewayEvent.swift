@@ -5,6 +5,6 @@ import Foundation
 
 public enum GatewayEvent {
   case messageCreate(Message)
-  case messageUpdate(Message)
+  case messageUpdate(Partial<Message>)
   case messageDelete(GatewayMessageDelete)
 }

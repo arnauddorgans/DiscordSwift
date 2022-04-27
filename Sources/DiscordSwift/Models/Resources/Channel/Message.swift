@@ -76,7 +76,7 @@ public struct Message: Codable {
 }
 
 extension Message {
-  enum CodingKeys: String, CodingKey {
+  public enum CodingKeys: String, CodingKey {
     case id
     case channelID = "channel_id"
     case guildID = "guild_id"
@@ -108,5 +108,44 @@ extension Message {
     case components
     case stickerItems = "sticker_items"
     case stickers
+  }
+}
+
+// MARK: PartialCodable
+extension Message: PartialCodable {
+  public static func partialMapper(for key: CodingKeys) -> PartialMapper<Message> {
+    switch key {
+    case .id:                   return .keyPath(\.id)
+    case .channelID:            return .keyPath(\.channelID)
+    case .guildID:              return .keyPath(\.guildID)
+    case .author:               return .keyPath(\.author)
+    case .member:               return .keyPath(\.member)
+    case .content:              return .keyPath(\.content)
+    case .timestamp:            return .keyPath(\.timestamp)
+    case .editedTimestamp:      return .keyPath(\.editedTimestamp)
+    case .tts:                  return .keyPath(\.tts)
+    case .mentionEveryone:      return .keyPath(\.mentionEveryone)
+    case .mentions:             return .keyPath(\.mentions)
+    case .mentionRoles:         return .keyPath(\.mentionRoles)
+    case .mentionChannels:      return .keyPath(\.mentionChannels)
+    case .attachments:          return .keyPath(\.attachments)
+    case .embeds:               return .keyPath(\.embeds)
+    case .reactions:            return .keyPath(\.reactions)
+    case .nonce:                return .keyPath(\.nonce)
+    case .pinned:               return .keyPath(\.pinned)
+    case .webhookID:            return .keyPath(\.webhookID)
+    case .type:                 return .keyPath(\.type)
+    case .activity:             return .keyPath(\.activity)
+    case .application:          return .keyPath(\.application)
+    case .applicationID:        return .keyPath(\.applicationID)
+    case .messageReference:     return .keyPath(\.messageReference)
+    case .flags:                return .keyPath(\.flags)
+    case .referencedMessageBox: return .keyPath(\.referencedMessageBox)
+    case .interaction:          return .keyPath(\.interaction)
+    case .thread:               return .keyPath(\.thread)
+    case .components:           return .keyPath(\.components)
+    case .stickerItems:         return .keyPath(\.stickerItems)
+    case .stickers:             return .keyPath(\.stickers)
+    }
   }
 }
