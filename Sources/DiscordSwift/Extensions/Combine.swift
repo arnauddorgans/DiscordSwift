@@ -30,6 +30,16 @@ public protocol Cancellable {
   func cancel()
 }
 
+public extension Cancellable {
+  func store(in set: inout Set<AnyCancellable>) {
+    set.insert(AnyCancellable(cancel))
+  }
+  
+  func store<C>(in collection: inout C) where C: RangeReplaceableCollection, C.Element == AnyCancellable {
+    collection.append(AnyCancellable(cancel))
+  }
+}
+
 struct MapPublisher<T, Output, Failure>: Publisher where T: Publisher, T.Failure == Failure {
   let publisher: T
   let map: (T.Output) -> Output
@@ -149,6 +159,16 @@ public final class AnyCancellable: Cancellable {
   
   deinit {
     cancel()
+  }
+}
+
+extension AnyCancellable: Hashable {
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(ObjectIdentifier(self))
+  }
+  
+  public static func == (lhs: AnyCancellable, rhs: AnyCancellable) -> Bool {
+    lhs === rhs
   }
 }
 
