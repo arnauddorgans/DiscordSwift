@@ -11,7 +11,7 @@ public protocol Publisher {
   associatedtype Output
   associatedtype Failure: Error
   
-  func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable
+  func sink(receiveValue: @escaping ((Output) -> Void)) -> AnyCancellable
 }
 
 public extension Publisher {
@@ -32,11 +32,18 @@ public protocol Cancellable {
 
 public extension Cancellable {
   func store(in set: inout Set<AnyCancellable>) {
-    set.insert(AnyCancellable(cancel))
+    set.insert(eraseToAnyCancellable())
   }
   
   func store<C>(in collection: inout C) where C: RangeReplaceableCollection, C.Element == AnyCancellable {
-    collection.append(AnyCancellable(cancel))
+    collection.append(eraseToAnyCancellable())
+  }
+  
+  private func eraseToAnyCancellable() -> AnyCancellable {
+    if let anyCancellable = self as? AnyCancellable {
+      return anyCancellable
+    }
+    return AnyCancellable(cancel)
   }
 }
 
@@ -44,7 +51,7 @@ struct MapPublisher<T, Output, Failure>: Publisher where T: Publisher, T.Failure
   let publisher: T
   let map: (T.Output) -> Output
   
-  func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+  func sink(receiveValue: @escaping ((Output) -> Void)) -> AnyCancellable {
     publisher.sink(receiveValue: {
       receiveValue(map($0))
     })
@@ -52,7 +59,7 @@ struct MapPublisher<T, Output, Failure>: Publisher where T: Publisher, T.Failure
 }
 
 public struct AnyPublisher<Output, Failure>: Publisher where Failure: Error {
-  private let sink: (@escaping (Output) -> Void) -> Cancellable
+  private let sink: (@escaping (Output) -> Void) -> AnyCancellable
   
   init<T>(publisher: T) where T: Publisher, T.Output == Output {
     sink = {
@@ -60,7 +67,7 @@ public struct AnyPublisher<Output, Failure>: Publisher where Failure: Error {
     }
   }
   
-  public func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+  public func sink(receiveValue: @escaping ((Output) -> Void)) -> AnyCancellable {
     sink(receiveValue)
   }
 }
@@ -75,7 +82,7 @@ public final class CurrentValueSubject<Output, Failure>: Publisher where Failure
     self.value = output
   }
   
-  public func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+  public func sink(receiveValue: @escaping ((Output) -> Void)) -> AnyCancellable {
     let subscriptionCancellable = subscriptionBox.add(subscriber: receiveValue)
     // Send current value on sink
     send(value: value, subscription: subscriptionCancellable.subscription)
@@ -102,7 +109,7 @@ public final class PassthroughSubject<Output, Failure>: Publisher where Failure:
     sendAll(newValue: output)
   }
   
-  public func sink(receiveValue: @escaping ((Output) -> Void)) -> Cancellable {
+  public func sink(receiveValue: @escaping ((Output) -> Void)) -> AnyCancellable {
     let subscriptionCancellable = subscriptionBox.add(subscriber: receiveValue)
     return subscriptionCancellable.cancellable
   }
