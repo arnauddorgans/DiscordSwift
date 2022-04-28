@@ -141,9 +141,7 @@ private extension GatewayServiceImpl {
       case .none:
         break
       }
-      if payload.sequenceNumber != nil {
-        lastPayload = payload
-      }
+      lastPayload = payload
       if let event = event {
         didReceiveEventSubject.send(event)
       }
