@@ -16,7 +16,7 @@ final class WebSocketServiceImpl: WebSocketService {
                onClose: @escaping (Int) -> Void) async throws {
     let previousWebSocket = webSocket
     webSocket = nil
-    try? await previousWebSocket?.close()
+    try? await previousWebSocket?.close(code: .unknown(0))
     try await WebSocket.connect(to: url, on: eventLoopGroup) { [weak self] ws -> Void in
       self?.webSocket = ws
       ws.onText { ws, string in

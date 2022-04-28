@@ -18,7 +18,7 @@ final class WebSocketServiceImpl: NSObject, WebSocketService {
     let previousSocketTask = socketTask
     socketTask = URLSession.shared.webSocketTask(with: url)
     socketTask?.delegate = self
-    previousSocketTask?.cancel()
+    previousSocketTask?.cancel(with: .invalid, reason: nil)
     try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
       didConnect = continuation.resume(with:)
       socketTask?.resume()
