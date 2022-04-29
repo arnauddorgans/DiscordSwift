@@ -16,5 +16,17 @@ public extension SelectMenu {
     public let emoji: Emoji?
     /// Will render this option as selected by default
     public let `default`: Bool?
+    
+    public init(label: String,
+                value: String,
+                description: String? = nil,
+                emoji: Emoji? = nil,
+                `default`: Bool? = nil) {
+      self.label = label
+      self.value = value
+      self.description = description
+      self.emoji = emoji
+      self.default = `default`
+    }
   }
 }

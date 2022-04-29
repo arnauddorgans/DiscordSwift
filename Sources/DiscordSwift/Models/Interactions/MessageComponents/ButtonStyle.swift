@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/interactions/message-components#button-object-button-styles
-public extension Component.Button {
+public extension Button {
   enum Style: Int, Codable {
     /// Blurple
     case primary = 1

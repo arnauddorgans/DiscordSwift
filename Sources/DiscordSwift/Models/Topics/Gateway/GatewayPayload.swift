@@ -49,11 +49,14 @@ extension GatewayPayload: Decodable {
         let message = try container.decode(Message.self, forKey: .eventData)
         eventData = .messageCreate(message)
       case .messageUpdate:
-        let message = try container.decode(Partial<Message>.self, forKey: .eventData)
+        let message = try container.decode(Message.self, forKey: .eventData)
         eventData = .messageUpdate(message)
       case .messageDelete:
         let messageDelete = try container.decode(GatewayMessageDelete.self, forKey: .eventData)
         eventData = .messageDelete(messageDelete)
+      case .interactionCreate:
+        let interaction = try container.decode(Interaction.self, forKey: .eventData)
+        eventData = .interactionCreate(interaction)
       case .resumed:
         eventData = .resumed
       default:

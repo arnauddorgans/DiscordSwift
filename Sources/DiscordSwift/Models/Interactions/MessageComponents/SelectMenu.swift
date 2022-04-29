@@ -7,7 +7,7 @@ import Foundation
 public struct SelectMenu: Codable {
   /// A developer-defined identifier for the select menu, max 100 characters
   public let customID: String
-  /// Array of select options  the choices in the select, max 25
+  /// The choices in the select, max 25
   public let options: [Option]
   /// Custom placeholder text if nothing is selected, max 150 characters
   public let placeholder: String?
@@ -17,6 +17,20 @@ public struct SelectMenu: Codable {
   public let maxValues: Int?
   /// Disable the select, default false
   public let disabled: Bool?
+  
+  public init(customID: String,
+              options: [Option],
+              placeholder: String? = nil,
+              minValues: Int? = nil,
+              maxValues: Int? = nil,
+              disabled: Bool? = nil) {
+    self.customID = customID
+    self.options = options
+    self.placeholder = placeholder
+    self.minValues = minValues
+    self.maxValues = maxValues
+    self.disabled = disabled
+  }
 }
 
 extension SelectMenu {
