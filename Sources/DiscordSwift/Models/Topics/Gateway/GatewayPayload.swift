@@ -93,6 +93,8 @@ extension GatewayPayload: Encodable {
       try container.encode(messageDelete, forKey: .eventData)
     case let .invalidSession(resumable: resumable):
       try container.encode(resumable, forKey: .eventData)
+    case let .interactionCreate(interaction):
+      try container.encode(interaction, forKey: .eventData)
     case .resumed, .reconnect:
       break
     }

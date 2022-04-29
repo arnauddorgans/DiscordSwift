@@ -16,4 +16,5 @@ enum GatewayData {
   case messageCreate(Message)
   case messageUpdate(Partial<Message>)
   case messageDelete(GatewayMessageDelete)
+  case interactionCreate(Interaction)
 }
