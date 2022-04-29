@@ -13,7 +13,7 @@ public extension Message {
     /// Embedded rich content (up to 6000 characters)
     public let embeds: [Embed]?
     /// Allowed mentions for the message
-    public let allowedMentions: AllowedMention?
+    public let allowedMentions: AllowedMentions?
     /// Include to make your message a reply
     public let messageReference: Reference?
     /// The components to include with the message
@@ -32,7 +32,7 @@ public extension Message {
     public init(content: String? = nil,
                 tts: Bool? = nil,
                 embeds: [Embed]? = nil,
-                allowedMentions: AllowedMention? = nil,
+                allowedMentions: AllowedMentions? = nil,
                 messageReference: Reference? = nil,
                 components: [Component]? = nil,
                 stickerIDs: [Snowflake]? = nil,

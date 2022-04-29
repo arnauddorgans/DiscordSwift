@@ -10,19 +10,22 @@ public final class Discord {
   private let channelService: ChannelService
   private let imageURLService: ImageURLService
   private let gatewayService: GatewayService
+  private let interactionService: InteractionService
   
   init(authenticationService: AuthenticationService,
        userService: UserService,
        guildService: GuildService,
        channelService: ChannelService,
        imageURLService: ImageURLService,
-       gatewayService: GatewayService) {
+       gatewayService: GatewayService,
+       interactionService: InteractionService) {
     self.userService = userService
     self.authenticationService = authenticationService
     self.guildService = guildService
     self.channelService = channelService
     self.imageURLService = imageURLService
     self.gatewayService = gatewayService
+    self.interactionService = interactionService
   }
 }
 
@@ -43,6 +46,7 @@ public extension Discord {
   var channel: ChannelService { channelService }
   var imageURL: ImageURLService { imageURLService }
   var gateway: GatewayService { gatewayService }
+  var interaction: InteractionService { interactionService }
   
   /// Create new Discord instance
   convenience init() {
@@ -63,11 +67,13 @@ public extension Discord {
                                             authService: authenticationService,
                                             networkingService: networkingService,
                                             webSocketService: webSocketService)
+    let interactionService = InteractionServiceImpl(networkingService: networkingService)
     self.init(authenticationService: authenticationService,
               userService: userService,
               guildService: guildService,
               channelService: channelService,
               imageURLService: imageURLService,
-              gatewayService: gatewayService)
+              gatewayService: gatewayService,
+              interactionService: interactionService)
   }
 }

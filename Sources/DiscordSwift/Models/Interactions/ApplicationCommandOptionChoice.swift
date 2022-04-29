@@ -12,6 +12,14 @@ public extension ApplicationCommand.Option {
     public let nameLocalizations: [String: String]?
     /// Value for the choice, up to 100 characters if string
     public let value: InputValue
+    
+    public init(name: String,
+                nameLocalizations: [String: String]? = nil,
+                value: InputValue) {
+      self.name = name
+      self.nameLocalizations = nameLocalizations
+      self.value = value
+    }
   }
 }
 

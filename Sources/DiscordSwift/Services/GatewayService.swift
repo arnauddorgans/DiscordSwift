@@ -140,7 +140,7 @@ private extension GatewayServiceImpl {
       case let .messageDelete(messageDelete):
         event = .messageDelete(messageDelete)
       case let .interactionCreate(interaction):
-        break
+        event = .interactionCreate(interaction)
       case .none:
         break
       }

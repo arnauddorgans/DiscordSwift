@@ -4,7 +4,7 @@
 import Foundation
 
 /// - seealso: https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure
-public struct AllowedMention: Codable {
+public struct AllowedMentions: Codable {
   /// An array of allowed mention types to parse from the content.
   public let parse: [AllowedMentionType]
   /// Array of role_ids to mention (Max size of 100)
@@ -15,7 +15,7 @@ public struct AllowedMention: Codable {
   public let repliedUser: Bool
 }
 
-extension AllowedMention {
+extension AllowedMentions {
   enum CodingKeys: String, CodingKey {
     case parse
     case roles
