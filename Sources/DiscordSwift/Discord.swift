@@ -51,9 +51,12 @@ public extension Discord {
   /// Create new Discord instance
   convenience init() {
     let environmentService = EnvironmentServiceImpl()
-    let authenticationService = AuthenticationServiceImpl()
+    let authenticationDataService = AuthenticationDataServiceImpl()
     let networkingService = NetworkingServiceImpl(environmentService: environmentService,
-                                                  authenticationService: authenticationService)
+                                                  authenticationDataService: authenticationDataService)
+    let authenticationService = AuthenticationServiceImpl(networkingService: networkingService,
+                                                          environmentService: environmentService,
+                                                          authenticationDataService: authenticationDataService)
     let userService = UserServiceImpl(networkingService: networkingService)
     let guildService = GuildServiceImpl(networkingService: networkingService)
     let channelService = ChannelServiceImpl(networkingService: networkingService)
@@ -64,7 +67,7 @@ public extension Discord {
     let webSocketService = WebSocketServiceImpl()
     #endif
     let gatewayService = GatewayServiceImpl(environmentService: environmentService,
-                                            authService: authenticationService,
+                                            authenticationDataService: authenticationDataService,
                                             networkingService: networkingService,
                                             webSocketService: webSocketService)
     let interactionService = InteractionServiceImpl(networkingService: networkingService)

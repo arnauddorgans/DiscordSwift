@@ -9,6 +9,12 @@ public protocol InteractionService {
   func createInteractionResponse(_ response: Interaction.Response,
                                  forInteractionID id: Snowflake,
                                  interactionToken: String) async throws
+  
+  /// Edits the initial Interaction response. Functions the same as Edit Webhook Message.
+  /// - seealso: https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+  func editOriginalInteractionResponse(with edit: Message.Edit,
+                                       forApplicationID id: Snowflake,
+                                       interactionToken: String) async throws
 }
 
 final class InteractionServiceImpl: InteractionService {
@@ -24,5 +30,13 @@ final class InteractionServiceImpl: InteractionService {
     try await networkingService.request(method: .post,
                                         path: "/interactions/\(id.stringValue)/\(interactionToken)/callback",
                                         body: response)
+  }
+  
+  func editOriginalInteractionResponse(with edit: Message.Edit,
+                                       forApplicationID id: Snowflake,
+                                       interactionToken: String) async throws {
+    try await networkingService.request(method: .patch,
+                                        path: "/webhooks/\(id.stringValue)/\(interactionToken)/messages/@original",
+                                        body: edit)
   }
 }

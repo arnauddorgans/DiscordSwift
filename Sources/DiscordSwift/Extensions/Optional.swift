@@ -3,19 +3,17 @@
 
 import Foundation
 
-struct OptionalError: Error { }
-
 protocol OptionalProtocol {
   associatedtype Wrapped
   
-  func unwrapped() throws -> Wrapped
+  func unwrapped(_ error: Error) throws -> Wrapped
 }
 
 extension Optional: OptionalProtocol {
-  func unwrapped() throws -> Wrapped {
+  func unwrapped(_ error: Error) throws -> Wrapped {
     switch self {
     case .none:
-      throw OptionalError()
+      throw error
     case let .some(value):
       return value
     }

@@ -100,7 +100,9 @@ extension Permissions: Decodable {
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     let stringValue = try container.decode(String.self)
-    let rawValue = try Int(stringValue).unwrapped()
+    let rawValue = try Int(stringValue).unwrapped(
+      DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Invalid permission raw value: \(stringValue)"))
+    )
     self.init(rawValue: rawValue)
   }
 }

@@ -13,7 +13,7 @@ public protocol GatewayService {
 final class GatewayServiceImpl: NSObject {
   private let environmentService: EnvironmentService
   private let networkingService: NetworkingService
-  private let authService: AuthenticationService
+  private let authenticationDataService: AuthenticationDataService
   private let webSocketService: WebSocketService
   
   private lazy var jsonDecoder: JSONDecoder = .iso8601
@@ -31,11 +31,11 @@ final class GatewayServiceImpl: NSObject {
   private let didCloseSubject: PassthroughSubject<Void, Never> = .init()
 
   init(environmentService: EnvironmentService,
-       authService: AuthenticationService,
+       authenticationDataService: AuthenticationDataService,
        networkingService: NetworkingService,
        webSocketService: WebSocketService) {
     self.environmentService = environmentService
-    self.authService = authService
+    self.authenticationDataService = authenticationDataService
     self.networkingService = networkingService
     self.webSocketService = webSocketService
   }
@@ -55,11 +55,11 @@ extension GatewayServiceImpl: GatewayService {
       cleanUp()
     }
     self.intents = intents
-    let auth = try authService.authentication.unwrapped()
+    let auth = try unwrappedToken()
     let gateway: URL
     switch auth {
-    case .token:    gateway = try await getGateway().url
-    case .botToken: gateway = try await getGatewayBot().url
+    case .oauthToken: gateway = try await getGateway().url
+    case .botToken:   gateway = try await getGatewayBot().url
     }
     let gatewayURL = try gatewayURL(url: gateway)
     weak var weakSelf = self
@@ -99,7 +99,7 @@ private extension GatewayServiceImpl {
 private extension GatewayServiceImpl {
   func handleMessage(data: Data) {
     do {
-      try print("------------------------\n\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + String(data: data, encoding: .utf8).unwrapped())
+      print("------------------------\n\(DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)) " + (String(data: data, encoding: .utf8) ?? ""))
       let payload = try jsonDecoder.decode(GatewayPayload.self, from: data)
       var event: GatewayEvent?
       switch payload.eventData {
@@ -199,7 +199,7 @@ private extension GatewayServiceImpl {
   }
   
   private func sendIdentifyMessage() async throws {
-    let token = try authService.authentication.unwrapped()
+    let token = try unwrappedToken()
     try await sendMessage(payload: .init(op: .identify,
                                          eventData: .identify(.init(token: token.stringValue,
                                                                     properties: .init(os: ProcessInfo.processInfo.osName,
@@ -224,10 +224,10 @@ private extension GatewayServiceImpl {
   }
   
   private func sendResumeMessage(readyData: GatewayReady) async throws {
-    let token = try authService.authentication.unwrapped().stringValue
+    let token = try unwrappedToken()
     let sessionID = readyData.sessionID
     try await sendMessage(payload: .init(op: .resume,
-                                         eventData: .resume(.init(token: token,
+                                         eventData: .resume(.init(token: token.stringValue,
                                                                   sessionID: sessionID,
                                                                   sequenceNumber: lastPayload?.sequenceNumber)),
                                          sequenceNumber: nil,
@@ -238,12 +238,12 @@ private extension GatewayServiceImpl {
 extension GatewayServiceImpl {
   /// - seealso: https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-query-string-params
   func gatewayURL(url: URL) throws -> URL {
-    var url = try URLComponents(url: url, resolvingAgainstBaseURL: false).unwrapped()
+    var url = try URLComponents(url: url, resolvingAgainstBaseURL: false).unwrapped(GatewayError.invalidURL)
     url.queryItems = [
       URLQueryItem(name: "v", value: String(environmentService.gatewayVersion.rawValue)),
       URLQueryItem(name: "encoding", value: "json")
     ] + (url.queryItems ?? [])
-    return try url.url.unwrapped()
+    return try url.url.unwrapped(GatewayError.invalidURL)
   }
   
   /// Returns an object with a single valid WSS URL, which the client can use for Connecting.
@@ -263,6 +263,10 @@ extension GatewayServiceImpl {
 }
 
 extension GatewayServiceImpl {
+  func unwrappedToken() throws -> Token {
+    try authenticationDataService.token.unwrapped(GatewayError.noToken)
+  }
+  
   /// Cancel all tasks and cleanup data
   func cleanUp() {
     // Tasks
@@ -274,4 +278,10 @@ extension GatewayServiceImpl {
     readyData = nil
     lastPayload = nil
   }
+}
+
+// MARK: Error
+private enum GatewayError: Error {
+  case noToken
+  case invalidURL
 }
