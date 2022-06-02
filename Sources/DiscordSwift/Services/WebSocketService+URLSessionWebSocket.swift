@@ -81,7 +81,6 @@ extension WebSocketServiceImpl: URLSessionWebSocketDelegate {
     self.onClose = nil
   }
 }
-#endif
 
 // MARK: Error
 private extension WebSocketServiceImpl {
@@ -93,3 +92,4 @@ private extension WebSocketServiceImpl {
 private enum WebSocketError: Error {
   case noSocket
 }
+#endif

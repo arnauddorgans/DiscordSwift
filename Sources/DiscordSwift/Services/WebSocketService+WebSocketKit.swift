@@ -40,13 +40,18 @@ final class WebSocketServiceImpl: WebSocketService {
   }
   
   func send(data: Data) async throws {
-    let string = try String(data: data, encoding: stringEncoding).unwrapped()
-    try await webSocket.unwrapped().send(string)
+    let string = try String(data: data, encoding: stringEncoding).unwrapped(WebSocketError.invalidData)
+    try await webSocket.unwrapped(WebSocketError.noSocket).send(string)
   }
   
   func close() async throws {
-    let webSocket = try webSocket.unwrapped()
+    let webSocket = try webSocket.unwrapped(WebSocketError.noSocket)
     try await webSocket.close(code: .goingAway)
   }
+}
+
+private enum WebSocketError: Error {
+  case noSocket
+  case invalidData
 }
 #endif
