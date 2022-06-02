@@ -19,7 +19,8 @@ public extension Guild {
     /// Custom guild emojis
     public let emojis: [Emoji]
     /// Enabled guild features
-    public let features: [Feature]
+    @SafeArrayCodable
+    public private(set) var features: [Feature]
     /// Approximate number of members in this guild
     public let approximateMemberCount: Int
     /// Approximate number of online members in this guild

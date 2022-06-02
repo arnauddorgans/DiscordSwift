@@ -16,5 +16,6 @@ public struct PartialGuild: Decodable {
   /// Total permissions for the user in the guild (excludes overwrites)
   public let permissions: Permissions?
   /// Enabled guild features
-  public let features: [Guild.Feature]
+  @SafeArrayCodable
+  public private(set) var features: [Guild.Feature]
 }

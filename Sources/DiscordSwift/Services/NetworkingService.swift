@@ -87,7 +87,7 @@ final class NetworkingServiceImpl: NetworkingService {
     let urlRequest = try urlRequest(method: method, path: path, queryItems: queryItems, bodyEncoder: bodyEncoder, body: body)
     let dataResponse = try await urlSession.dataResponse(for: urlRequest)
     let httpURLResponse = try (dataResponse.response as? HTTPURLResponse).unwrapped(NetworkingError.invalidResponse)
-    let httpResponseCode = try HTTPResponseCode(rawValue: httpURLResponse.statusCode).unwrapped(NetworkingError.invalidResponseCode)
+    let httpResponseCode = HTTPResponseCode(rawValue: httpURLResponse.statusCode)
     if httpResponseCode.isError {
       let error = try jsonDecoder.decode(ErrorMessage.self, from: dataResponse.data)
       throw error
@@ -137,5 +137,4 @@ private enum NetworkingError: Error {
   case invalidBody
   case invalidURL
   case invalidResponse
-  case invalidResponseCode
 }

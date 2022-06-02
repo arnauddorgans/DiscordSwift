@@ -45,7 +45,8 @@ public struct Guild: Decodable {
   /// Custom guild emojis
   public let emojis: [Emoji]
   /// Enabled guild features
-  public let features: [Feature]
+  @SafeArrayCodable
+  public private(set) var features: [Feature]
   /// Integer  required MFA level for the guild
   public let mfaLevel: MFALevel
   /// Application id of the guild creator if it is bot-created

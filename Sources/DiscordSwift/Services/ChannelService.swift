@@ -14,6 +14,7 @@ public protocol ChannelService {
   /// Returns a message object.
   /// Fires a Message Create Gateway event. See message formatting for more information on how to properly format messages.
   /// - seealso: https://discord.com/developers/docs/resources/channel#create-message
+  @discardableResult
   func createMessage(channelID: Snowflake, draft: Message.Draft) async throws -> Message
   
   func deleteMessage(channelID: Snowflake, messageID: Snowflake) async throws
