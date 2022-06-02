@@ -14,6 +14,16 @@ public extension Embed {
     public let iconURL: URL?
     /// A proxied url of author icon
     public let proxyIconURL: URL?
+    
+    public init(name: String,
+                url: URL? = nil,
+                iconURL: URL? = nil,
+                proxyIconURL: URL? = nil) {
+      self.name = name
+      self.url = url
+      self.iconURL = iconURL
+      self.proxyIconURL = proxyIconURL
+    }
   }
 }
 
