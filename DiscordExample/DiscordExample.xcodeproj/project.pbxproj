@@ -1,0 +1,538 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		97108BBA280B84E200AF799A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BB9280B84E200AF799A /* ChatView.swift */; };
+		97108BBB280B84E200AF799A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BB9280B84E200AF799A /* ChatView.swift */; };
+		97108BBD280B986200AF799A /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BBC280B986200AF799A /* RootView.swift */; };
+		97108BBE280B986200AF799A /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BBC280B986200AF799A /* RootView.swift */; };
+		97108BC0280B9C2F00AF799A /* GuildsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BBF280B9C2F00AF799A /* GuildsMenuView.swift */; };
+		97108BC1280B9C2F00AF799A /* GuildsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97108BBF280B9C2F00AF799A /* GuildsMenuView.swift */; };
+		974D57742803B59400ADE8E3 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 974D57732803B59400ADE8E3 /* SDWebImageSwiftUI */; };
+		974D57762803BA7400ADE8E3 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 974D57752803BA7400ADE8E3 /* SDWebImageSwiftUI */; };
+		97B7153A2803A02000FFA23A /* ChannelsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B715392803A02000FFA23A /* ChannelsMenuView.swift */; };
+		97B7153B2803A02000FFA23A /* ChannelsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B715392803A02000FFA23A /* ChannelsMenuView.swift */; };
+		97EC822528008A1500496F18 /* DiscordExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EC821528008A1400496F18 /* DiscordExampleApp.swift */; };
+		97EC822628008A1500496F18 /* DiscordExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EC821528008A1400496F18 /* DiscordExampleApp.swift */; };
+		97EC822928008A1500496F18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97EC821728008A1500496F18 /* Assets.xcassets */; };
+		97EC822A28008A1500496F18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97EC821728008A1500496F18 /* Assets.xcassets */; };
+		97EC823728008AF700496F18 /* Discord in Frameworks */ = {isa = PBXBuildFile; productRef = 97EC823628008AF700496F18 /* Discord */; };
+		97EC823928008AFC00496F18 /* Discord in Frameworks */ = {isa = PBXBuildFile; productRef = 97EC823828008AFC00496F18 /* Discord */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		97108BB9280B84E200AF799A /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		97108BBC280B986200AF799A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		97108BBF280B9C2F00AF799A /* GuildsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildsMenuView.swift; sourceTree = "<group>"; };
+		97B715392803A02000FFA23A /* ChannelsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsMenuView.swift; sourceTree = "<group>"; };
+		97EC821528008A1400496F18 /* DiscordExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscordExampleApp.swift; sourceTree = "<group>"; };
+		97EC821728008A1500496F18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		97EC821C28008A1500496F18 /* DiscordExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiscordExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		97EC822228008A1500496F18 /* DiscordExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiscordExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		97EC822428008A1500496F18 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		97EC823428008AA200496F18 /* Discord */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Discord; path = ..; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		97EC821928008A1500496F18 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				974D57742803B59400ADE8E3 /* SDWebImageSwiftUI in Frameworks */,
+				97EC823728008AF700496F18 /* Discord in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97EC821F28008A1500496F18 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				974D57762803BA7400ADE8E3 /* SDWebImageSwiftUI in Frameworks */,
+				97EC823928008AFC00496F18 /* Discord in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		97EC820F28008A1400496F18 = {
+			isa = PBXGroup;
+			children = (
+				97EC823328008AA200496F18 /* Packages */,
+				97EC821428008A1400496F18 /* Shared */,
+				97EC822328008A1500496F18 /* macOS */,
+				97EC821D28008A1500496F18 /* Products */,
+				97EC823528008AF700496F18 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		97EC821428008A1400496F18 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				97EC821528008A1400496F18 /* DiscordExampleApp.swift */,
+				97108BBC280B986200AF799A /* RootView.swift */,
+				97108BBF280B9C2F00AF799A /* GuildsMenuView.swift */,
+				97B715392803A02000FFA23A /* ChannelsMenuView.swift */,
+				97108BB9280B84E200AF799A /* ChatView.swift */,
+				97EC821728008A1500496F18 /* Assets.xcassets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		97EC821D28008A1500496F18 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				97EC821C28008A1500496F18 /* DiscordExample.app */,
+				97EC822228008A1500496F18 /* DiscordExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		97EC822328008A1500496F18 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				97EC822428008A1500496F18 /* macOS.entitlements */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		97EC823328008AA200496F18 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				97EC823428008AA200496F18 /* Discord */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		97EC823528008AF700496F18 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		97EC821B28008A1500496F18 /* DiscordExample (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 97EC822D28008A1500496F18 /* Build configuration list for PBXNativeTarget "DiscordExample (iOS)" */;
+			buildPhases = (
+				97EC821828008A1500496F18 /* Sources */,
+				97EC821928008A1500496F18 /* Frameworks */,
+				97EC821A28008A1500496F18 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "DiscordExample (iOS)";
+			packageProductDependencies = (
+				97EC823628008AF700496F18 /* Discord */,
+				974D57732803B59400ADE8E3 /* SDWebImageSwiftUI */,
+			);
+			productName = "DiscordExample (iOS)";
+			productReference = 97EC821C28008A1500496F18 /* DiscordExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		97EC822128008A1500496F18 /* DiscordExample (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 97EC823028008A1500496F18 /* Build configuration list for PBXNativeTarget "DiscordExample (macOS)" */;
+			buildPhases = (
+				97EC821E28008A1500496F18 /* Sources */,
+				97EC821F28008A1500496F18 /* Frameworks */,
+				97EC822028008A1500496F18 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "DiscordExample (macOS)";
+			packageProductDependencies = (
+				97EC823828008AFC00496F18 /* Discord */,
+				974D57752803BA7400ADE8E3 /* SDWebImageSwiftUI */,
+			);
+			productName = "DiscordExample (macOS)";
+			productReference = 97EC822228008A1500496F18 /* DiscordExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		97EC821028008A1400496F18 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					97EC821B28008A1500496F18 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+					97EC822128008A1500496F18 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+				};
+			};
+			buildConfigurationList = 97EC821328008A1400496F18 /* Build configuration list for PBXProject "DiscordExample" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 97EC820F28008A1400496F18;
+			packageReferences = (
+				974D57722803B59400ADE8E3 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
+			productRefGroup = 97EC821D28008A1500496F18 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				97EC821B28008A1500496F18 /* DiscordExample (iOS) */,
+				97EC822128008A1500496F18 /* DiscordExample (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		97EC821A28008A1500496F18 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97EC822928008A1500496F18 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97EC822028008A1500496F18 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97EC822A28008A1500496F18 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		97EC821828008A1500496F18 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97108BBA280B84E200AF799A /* ChatView.swift in Sources */,
+				97EC822528008A1500496F18 /* DiscordExampleApp.swift in Sources */,
+				97108BC0280B9C2F00AF799A /* GuildsMenuView.swift in Sources */,
+				97B7153A2803A02000FFA23A /* ChannelsMenuView.swift in Sources */,
+				97108BBD280B986200AF799A /* RootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97EC821E28008A1500496F18 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97108BBB280B84E200AF799A /* ChatView.swift in Sources */,
+				97EC822628008A1500496F18 /* DiscordExampleApp.swift in Sources */,
+				97108BC1280B9C2F00AF799A /* GuildsMenuView.swift in Sources */,
+				97B7153B2803A02000FFA23A /* ChannelsMenuView.swift in Sources */,
+				97108BBE280B986200AF799A /* RootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		97EC822B28008A1500496F18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		97EC822C28008A1500496F18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		97EC822E28008A1500496F18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arnauddorgans.DiscordExample;
+				PRODUCT_NAME = DiscordExample;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		97EC822F28008A1500496F18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arnauddorgans.DiscordExample;
+				PRODUCT_NAME = DiscordExample;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		97EC823128008A1500496F18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arnauddorgans.DiscordExample;
+				PRODUCT_NAME = DiscordExample;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		97EC823228008A1500496F18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arnauddorgans.DiscordExample;
+				PRODUCT_NAME = DiscordExample;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		97EC821328008A1400496F18 /* Build configuration list for PBXProject "DiscordExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97EC822B28008A1500496F18 /* Debug */,
+				97EC822C28008A1500496F18 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		97EC822D28008A1500496F18 /* Build configuration list for PBXNativeTarget "DiscordExample (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97EC822E28008A1500496F18 /* Debug */,
+				97EC822F28008A1500496F18 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		97EC823028008A1500496F18 /* Build configuration list for PBXNativeTarget "DiscordExample (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97EC823128008A1500496F18 /* Debug */,
+				97EC823228008A1500496F18 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		974D57722803B59400ADE8E3 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		974D57732803B59400ADE8E3 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 974D57722803B59400ADE8E3 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		974D57752803BA7400ADE8E3 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 974D57722803B59400ADE8E3 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		97EC823628008AF700496F18 /* Discord */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Discord;
+		};
+		97EC823828008AFC00496F18 /* Discord */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Discord;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 97EC821028008A1400496F18 /* Project object */;
+}
